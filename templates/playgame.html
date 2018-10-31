@@ -90,10 +90,6 @@
         <td class="col2">{{mode_help}}</td>
     </tr>
     <tr>
-        <td class="col1">Served By</td>
-        <td class="col2">{{served_by}}</td>
-    </tr>
-    <tr>
         <td class="col1">Game Key</td>
         <td class="col2">{{key}}</td>
     </tr>
@@ -133,8 +129,9 @@
 
 {% block footer %}
 <p>
-        <strong>CowBull Version: </strong>0.1
-        <strong>Environment: </strong>{{environment}}; 
-        <strong>Build: </strong>{{build_number}}
+    <strong>CowBull Version: </strong>0.1
+    <strong>Environment: </strong>{{environment}}; 
+    <strong>Build: </strong>{{build_number}}
+    <strong>Game Server: </strong>{{served_by}}
 </p>
 {% endblock %}
