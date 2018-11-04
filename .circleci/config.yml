@@ -31,15 +31,20 @@ jobs:
             export BUILD_NUMBER=$MAJOR_VERSION"."$MINOR_VERSION"."$CIRCLE_BUILD_NUM
             export doclog=${doclog}
             echo "Testing ${BUILD_NUMBER}"
-            output=$(docker-compose -f vendor/docker/docker-compose-cicd.yml up -d)
-            echo $output
+            docker-compose -f vendor/docker/docker-compose-cicd.yml up -d | tee ~/compose.out
+            redis=awk '{split($0,a," "); print $2}' <<< $(cat ~/composeout | grep "docker_redis_1")
+            server=awk '{split($0,a," "); print $2}' <<< $(cat ~/composeout | grep "docker_cowbull_svc_1")
+            webapp=awk '{split($0,a," "); print $2}' <<< $(cat ~/composeout | grep "docker_cowbull_webapp_1")
+            echo "Redis is: "$redis
+            echo "Cowbull is: "$server
+            echo "WebApp is: "$webapp
 
       - run:
           name: Run unit tests
           command: |
-            docker exec -t docker_cowbull_webapp_1 \
+            docker exec -t $webapp \
               bash -c "python -m unittest -v tests 2> >(tee -a /tmp/unittest-report.log >&2)"
-            docker cp docker_cowbull_webapp_1:/tmp/unittest-report.log /tmp/unittest-report.log
+            docker cp $webapp:/tmp/unittest-report.log /tmp/unittest-report.log
             echo "Test results status: $?"
 
       - run:
