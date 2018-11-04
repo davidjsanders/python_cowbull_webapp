@@ -43,6 +43,7 @@ jobs:
             echo "Redis is: "$redis
             echo "Cowbull is: "$server
             echo "WebApp is: "$webapp
+            echo "export webapp=$webapp" >> $BASH_ENV
 
       - run:
           name: Run unit tests
