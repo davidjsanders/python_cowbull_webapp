@@ -37,9 +37,9 @@ jobs:
             export doclog=${doclog}
             echo "Testing ${BUILD_NUMBER}"
             docker-compose -f vendor/docker/docker-compose-cicd.yml up -d > >(tee -a ~/stdout.log) 2> >(tee -a ~/compose.out >&2)
-            redis=$(awk '{split($0,a," "); print a[1]}' <<< $(cat ~/compose.out | grep "Creating docker_redis_1"))
-            server=$(awk '{split($0,a," "); print a[1]}' <<< $(cat ~/compose.out | grep "Creating docker_cowbull_svc_1"))
-            webapp=$(awk '{split($0,a," "); print a[1]}' <<< $(cat ~/compose.out | grep "Creating docker_cowbull_webapp_1"))
+            redis=$(awk '{split($0,a," "); print a[2]}' <<< $(cat ~/compose.out | grep "Creating docker_redis_1"))
+            server=$(awk '{split($0,a," "); print a[2]}' <<< $(cat ~/compose.out | grep "Creating docker_cowbull_svc_1"))
+            webapp=$(awk '{split($0,a," "); print a[2]}' <<< $(cat ~/compose.out | grep "Creating docker_cowbull_webapp_1"))
             echo "Redis is: "$redis
             echo "Cowbull is: "$server
             echo "WebApp is: "$webapp
