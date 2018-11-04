@@ -36,7 +36,7 @@ jobs:
             export BUILD_NUMBER=$MAJOR_VERSION"."$MINOR_VERSION"."$CIRCLE_BUILD_NUM
             export doclog=${doclog}
             echo "Testing ${BUILD_NUMBER}"
-            docker-compose -f vendor/docker/docker-compose-cicd.yml up -d > >(tee -a stdout.log) 2> >(tee -a compose.out >&2)
+            docker-compose -f vendor/docker/docker-compose-cicd.yml up -d > >(tee -a ~/stdout.log) 2> >(tee -a ~/compose.out >&2)
             redis=$(awk '{split($0,a," "); print $2}' <<< $(cat ~/compose.out | grep "docker_redis_1"))
             server=$(awk '{split($0,a," "); print $2}' <<< $(cat ~/compose.out | grep "docker_cowbull_svc_1"))
             webapp=$(awk '{split($0,a," "); print $2}' <<< $(cat ~/compose.out | grep "docker_cowbull_webapp_1"))
