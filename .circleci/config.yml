@@ -31,7 +31,8 @@ jobs:
             export BUILD_NUMBER=$MAJOR_VERSION"."$MINOR_VERSION"."$CIRCLE_BUILD_NUM
             export doclog=${doclog}
             echo "Testing ${BUILD_NUMBER}"
-            docker-compose -f vendor/docker/docker-compose-cicd.yml up -d
+            output=$(docker-compose -f vendor/docker/docker-compose-cicd.yml up -d)
+            echo $output
 
       - run:
           name: Run unit tests
