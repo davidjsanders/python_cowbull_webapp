@@ -43,6 +43,7 @@ jobs:
             echo "Redis is: $redis"
             echo "Cowbull is: $server"
             echo "WebApp is: $webapp"
+            docker ps -a
             docker exec -t $webapp \
               bash -c "python -m unittest -v tests 2> >(tee -a /tmp/unittest-report.log >&2)"
             docker cp $webapp:/tmp/unittest-report.log /tmp/unittest-report.log
