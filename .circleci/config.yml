@@ -32,9 +32,9 @@ jobs:
             export doclog=${doclog}
             echo "Testing ${BUILD_NUMBER}"
             docker-compose -f vendor/docker/docker-compose-cicd.yml up -d | tee ~/compose.out
-            redis=awk '{split($0,a," "); print $2}' <<< $(cat ~/composeout | grep "docker_redis_1")
-            server=awk '{split($0,a," "); print $2}' <<< $(cat ~/composeout | grep "docker_cowbull_svc_1")
-            webapp=awk '{split($0,a," "); print $2}' <<< $(cat ~/composeout | grep "docker_cowbull_webapp_1")
+            redis=awk '{split($0,a," "); print $2}' <<< $(cat ~/compose.out | grep "docker_redis_1")
+            server=awk '{split($0,a," "); print $2}' <<< $(cat ~/compose.out | grep "docker_cowbull_svc_1")
+            webapp=awk '{split($0,a," "); print $2}' <<< $(cat ~/compose.out | grep "docker_cowbull_webapp_1")
             echo "Redis is: "$redis
             echo "Cowbull is: "$server
             echo "WebApp is: "$webapp
