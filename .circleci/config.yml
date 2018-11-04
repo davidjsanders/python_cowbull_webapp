@@ -47,6 +47,7 @@ jobs:
       - run:
           name: Run unit tests
           command: |
+            echo "WebApp is: "$webapp
             docker exec -t $webapp \
               bash -c "python -m unittest -v tests 2> >(tee -a /tmp/unittest-report.log >&2)"
             docker cp $webapp:/tmp/unittest-report.log /tmp/unittest-report.log
