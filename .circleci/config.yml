@@ -37,12 +37,8 @@ jobs:
             export doclog=${doclog}
             echo "Testing ${BUILD_NUMBER}"
             docker-compose -f vendor/docker/docker-compose-cicd.yml up -d
-            docker ps -a > >(tee -a ~/stdout.log) 2> >(tee -a ~/compose.out >&2)
-            redis=$(awk '{split($0,a," "); print a[2]}' <<< $(cat ~/compose.out | grep "Creating docker_redis_1"))
-            server=$(awk '{split($0,a," "); print a[2]}' <<< $(cat ~/compose.out | grep "Creating docker_cowbull_svc_1"))
-            webapp=$(awk '{split($0,a," "); print a[15]}' <<< $(cat ~/compose.out | grep "Creating docker_cowbull_webapp_1"))
-            echo "Redis is: $redis"
-            echo "Cowbull is: $server"
+            
+            webapp=$(docker ps -a --format '{{.Names}}' | grep "docker_cowbull_webapp_1_")
             echo "WebApp is: $webapp"
             echo "export webapp=$webapp" >> $BASH_ENV
 
