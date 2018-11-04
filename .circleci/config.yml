@@ -23,6 +23,11 @@ jobs:
             docker login --username=$doclog --password=$docpass
 
       - run:
+          name: Ensure AWK is available
+          command: |
+            apt-get install gawk
+
+      - run:
           name: Docker up
           environment:
             COWBULL_ENVIRONMENT: "CircleCI"
