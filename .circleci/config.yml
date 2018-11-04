@@ -40,14 +40,8 @@ jobs:
             redis=$(awk '{split($0,a," "); print a[2]}' <<< $(cat ~/compose.out | grep "Creating docker_redis_1"))
             server=$(awk '{split($0,a," "); print a[2]}' <<< $(cat ~/compose.out | grep "Creating docker_cowbull_svc_1"))
             webapp=$(awk '{split($0,a," "); print a[2]}' <<< $(cat ~/compose.out | grep "Creating docker_cowbull_webapp_1"))
-            echo "Redis is: "$redis
-            echo "Cowbull is: "$server
-            echo "WebApp is: "$webapp
-            echo "export webapp=$webapp" >> $BASH_ENV
-
-      - run:
-          name: Run unit tests
-          command: |
+            echo "Redis is: $redis"
+            echo "Cowbull is: $server"
             echo "WebApp is: $webapp"
             docker exec -t $webapp \
               bash -c "python -m unittest -v tests 2> >(tee -a /tmp/unittest-report.log >&2)"
