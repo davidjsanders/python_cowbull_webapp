@@ -65,7 +65,7 @@ services:
     networks:
       - traefik-net
   cowbull_webapp:
-    image: 'dsanderscan/cowbull_webapp:1.0.106'
+    image: 'dsanderscan/cowbull_webapp:1.0.135'
     depends_on:
       - cowbull_svc
     deploy:
