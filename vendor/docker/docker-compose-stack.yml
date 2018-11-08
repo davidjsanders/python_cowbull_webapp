@@ -11,7 +11,7 @@ services:
       placement:
         constraints: [node.role == manager]
       restart_policy:
-        condition: always
+        condition: any
       labels:
         - "traefik.enable=true"
         - "traefik.port=8080"
@@ -40,7 +40,7 @@ services:
       placement:
         constraints: [node.role==manager]
       restart_policy:
-        condition: always
+        condition: any
   redis:
     image: 'redis:latest'
     depends_on:
@@ -50,7 +50,7 @@ services:
       placement:
         constraints: [node.role == worker]
       restart_policy:
-        condition: always
+        condition: any
       resources:
         limits:
           cpus: "0.2"
@@ -66,7 +66,7 @@ services:
       placement:
         constraints: [node.role == worker]
       restart_policy:
-        condition: always
+        condition: any
       resources:
         limits:
           cpus: "0.2"
@@ -85,7 +85,7 @@ services:
       placement:
         constraints: [node.role == worker]
       restart_policy:
-        condition: always
+        condition: any
       resources:
         limits:
           cpus: "0.2"
