@@ -3,6 +3,8 @@ version: '3'
 services:
   visualizer:
     image: dockersamples/visualizer:stable
+    depends_on:
+      - webapp
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     deploy:
@@ -37,6 +39,8 @@ services:
         constraints: [node.role==manager]
   redis:
     image: 'redis:latest'
+    depends_on:
+      - traefik
     deploy:
       replicas: 1
       restart_policy:
@@ -47,7 +51,7 @@ services:
           memory: 200M
     networks:
       - traefik-net
-  cowbull_svc:
+  app_srv:
     image: 'dsanderscan/cowbull:1.0.172'
     depends_on:
       - redis
@@ -57,17 +61,17 @@ services:
         condition: on-failure
       resources:
         limits:
-          cpus: "0.3"
+          cpus: "0.2"
           memory: 200M
     environment:
       - LOGGING_LEVEL=10
       - 'PERSISTER={"engine_name": "redis", "parameters": {"host": "redis", "port": 6379, "db": 0}}'
     networks:
       - traefik-net
-  cowbull_webapp:
+  webapp:
     image: 'dsanderscan/cowbull_webapp:1.0.135'
     depends_on:
-      - cowbull_svc
+      - app_srv
     deploy:
       replicas: 3
       restart_policy:
@@ -82,7 +86,7 @@ services:
         - "traefik.docker.network=traefik-net"
         - "traefik.frontend.rule=Host:cowbull"
     environment:
-      - COWBULL_SERVER=cowbull_svc
+      - COWBULL_SERVER=app_srv
       - COWBULL_PORT=8080
       - COWBULL_VERSION=v1
       - BUILD_NUMBER=1.0.172-COMPOSE
