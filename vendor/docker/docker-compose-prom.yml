@@ -83,8 +83,6 @@ services:
       - "traefik.docker.network=webapp_cowbull_network"
     networks:
       - webapp_cowbull_network
-    deploy:
-      replicas: 3
     restart: always
 
   cowbull_webapp:
