@@ -59,6 +59,14 @@ services:
     image: 'dsanderscan/cowbull:1.0.172'
     depends_on:
       - redis
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: any
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 100M
     environment:
       - LOGGING_LEVEL=10
       - 'PERSISTER={"engine_name": "redis", "parameters": {"host": "redis", "port": 6379, "db": 0}}'
@@ -67,6 +75,8 @@ services:
       - "traefik.docker.network=webapp_cowbull_network"
     networks:
       - webapp_cowbull_network
+    deploy:
+      replicas: 3
     restart: always
 
   cowbull_webapp:
@@ -76,6 +86,14 @@ services:
     depends_on:
       - cowbull_svc
     image: 'dsanderscan/cowbull_webapp:1.0.136'
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: any
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 100M
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=webapp_cowbull_network"
