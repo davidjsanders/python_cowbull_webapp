@@ -112,5 +112,7 @@ services:
       - COWBULL_ENVIRONMENT=--LOCAL--
     networks:
       - webapp_cowbull_network
+
 networks:
   webapp_cowbull_network:
+    external: true
