@@ -3,6 +3,8 @@ version: '3.7'
 networks:
   webapp_cowbull_network:
     external: true
+  cowbull_mgt:
+    external: true
 
 services:
   cadvisor:
@@ -16,6 +18,8 @@ services:
      - /var/lib/docker/:/var/lib/docker:ro
     depends_on:
       - traefik
+    networks:
+      - cowbull_mgt
 
   prometheus:
     image: prom/prometheus:latest
@@ -27,6 +31,8 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     depends_on:
       - cadvisor
+    networks:
+      - cowbull_mgt
 
   traefik:
     image: traefik  # The official Traefik docker image
@@ -41,6 +47,7 @@ services:
       - "traefik.docker.network=webapp_cowbull_network"
     networks:
       - webapp_cowbull_network
+      - cowbull_mgt
     depends_on:
       - webapp_cowbull_network
       - redis
