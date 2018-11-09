@@ -79,7 +79,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=webapp_cowbull_network"
-      - "traefik.frontend.rule=Host:cowbull-local"
+      - "traefik.frontend.rule=Host:cowbull"
       - "traefik.backend=backend-cowbull-webapp-docker"
       # - "traefik.backend.healthcheck.path=/health"
       # - "traefik.backend.healthcheck.interval=5s"
@@ -102,7 +102,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=webapp_cowbull_network"
-      - "traefik.frontend.rule=Host:cowbull-local"
+      - "traefik.frontend.rule=Host:cowbull"
       - "traefik.backend=backend-cowbull-webapp-docker"
       - "traefik.weight=1"
     environment:
