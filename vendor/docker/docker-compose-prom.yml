@@ -70,13 +70,16 @@ services:
     restart: always
 
   cowbull_webapp:
+    build:
+      context: ../../
+      dockerfile: vendor/docker/Dockerfile
     depends_on:
       - cowbull_svc
     image: 'dsanderscan/cowbull_webapp:1.0.136'
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=webapp_cowbull_network"
-      - "traefik.frontend.rule=Host:cowbull"
+      - "traefik.frontend.rule=Host:cowbull-local"
       - "traefik.backend=backend-cowbull-webapp-docker"
       # - "traefik.backend.healthcheck.path=/health"
       # - "traefik.backend.healthcheck.interval=5s"
@@ -96,11 +99,10 @@ services:
     image: 'dsanderscan/cowbull_webapp:1.0.136'
     depends_on:
       - cowbull_svc
-      - cowbull_webapp
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=webapp_cowbull_network"
-      - "traefik.frontend.rule=Host:cowbull"
+      - "traefik.frontend.rule=Host:cowbull-local"
       - "traefik.backend=backend-cowbull-webapp-docker"
       - "traefik.weight=1"
     environment:
