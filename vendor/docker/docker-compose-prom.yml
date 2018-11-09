@@ -2,6 +2,7 @@ version: '3.7'
 
 networks:
   webapp_cowbull_network:
+    external: true
 
 services:
   cadvisor:
