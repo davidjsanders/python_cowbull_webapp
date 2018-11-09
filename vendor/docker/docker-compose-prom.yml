@@ -1,10 +1,8 @@
-version: '3.7'
+version: '3'
 
 networks:
-  webapp_cowbull_network:
-    external: true
-  cowbull_mgt:
-    external: true
+  i_cowbull_network:
+  i_management_network:
 
 services:
   cadvisor:
@@ -19,7 +17,7 @@ services:
     depends_on:
       - traefik
     networks:
-      - cowbull_mgt
+      - i_management_network
 
   prometheus:
     image: prom/prometheus:latest
@@ -32,7 +30,7 @@ services:
     depends_on:
       - cadvisor
     networks:
-      - cowbull_mgt
+      - i_management_network
 
   traefik:
     image: traefik  # The official Traefik docker image
@@ -44,12 +42,12 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock  # So that Traefik can listen to the Docker events
       - ./traefik.toml:/etc/traefik/traefik.toml
     labels:
-      - "traefik.docker.network=webapp_cowbull_network"
+      - "traefik.docker.network=i_cowbull_network"
     networks:
-      - webapp_cowbull_network
-      - cowbull_mgt
+      - i_cowbull_network
+      - i_management_network
     depends_on:
-      - webapp_cowbull_network
+      - i_cowbull_network
       - redis
       - cowbull_svc
       - cowbull_webapp
@@ -57,10 +55,10 @@ services:
   redis:
     image: 'redis:latest'
     networks:
-      - webapp_cowbull_network
+      - i_cowbull_network
     labels:
       - "traefik.enable=false"
-      - "traefik.docker.network=webapp_cowbull_network"
+      - "traefik.docker.network=i_cowbull_network"
     restart: always
 
   cowbull_svc:
@@ -80,9 +78,9 @@ services:
       - 'PERSISTER={"engine_name": "redis", "parameters": {"host": "redis", "port": 6379, "db": 0}}'
     labels:
       - "traefik.enable=false"
-      - "traefik.docker.network=webapp_cowbull_network"
+      - "traefik.docker.network=i_cowbull_network"
     networks:
-      - webapp_cowbull_network
+      - i_cowbull_network
     restart: always
 
   cowbull_webapp:
@@ -102,17 +100,17 @@ services:
           memory: 100M
       labels:
         - "traefik.enable=true"
-        - "traefik.docker.network=webapp_cowbull_network"
+        - "traefik.docker.network=i_cowbull_network"
         - "traefik.frontend.rule=Host:cowbull"
         - "traefik.backend=backend-cowbull-webapp-docker"
         # - "traefik.backend.healthcheck.path=/health"
         # - "traefik.backend.healthcheck.interval=5s"
         # - "traefik.backend.healthcheck.port=8080"
         # - "traefik.backend.healthcheck.method=GET"
-        # - "traefik.weight=3"
+        - "traefik.weight=3"
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=webapp_cowbull_network"
+      - "traefik.docker.network=i_cowbull_network"
       - "traefik.frontend.rule=Host:cowbull"
       - "traefik.backend=backend-cowbull-webapp-docker"
       - "traefik.weight=3"
@@ -123,7 +121,7 @@ services:
       - BUILD_NUMBER=1.0.172-COMPOSE
       - COWBULL_ENVIRONMENT=--LOCAL--
     networks:
-      - webapp_cowbull_network
+      - i_cowbull_network
 
   cowbull_webapp_g:
     image: 'dsanderscan/cowbull_webapp:1.0.136'
@@ -139,13 +137,13 @@ services:
           memory: 100M
       labels:
         - "traefik.enable=true"
-        - "traefik.docker.network=webapp_cowbull_network"
+        - "traefik.docker.network=i_cowbull_network"
         - "traefik.frontend.rule=Host:cowbull"
         - "traefik.backend=backend-cowbull-webapp-docker"
-        # - "traefik.weight=1"
+        - "traefik.weight=1"
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=webapp_cowbull_network"
+      - "traefik.docker.network=i_cowbull_network"
       - "traefik.frontend.rule=Host:cowbull"
       - "traefik.backend=backend-cowbull-webapp-docker"
       - "traefik.weight=1"
@@ -157,4 +155,4 @@ services:
       - NAVBAR_COLOUR=bg-success
       - COWBULL_ENVIRONMENT=--LOCAL--
     networks:
-      - webapp_cowbull_network
+      - i_cowbull_network
