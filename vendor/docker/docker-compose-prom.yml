@@ -96,6 +96,7 @@ services:
     image: 'dsanderscan/cowbull_webapp:1.0.136'
     depends_on:
       - cowbull_svc
+      - cowbull_webapp
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=webapp_cowbull_network"
