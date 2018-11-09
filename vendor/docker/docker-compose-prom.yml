@@ -70,9 +70,6 @@ services:
     restart: always
 
   cowbull_webapp:
-    build:
-      context: ../../
-      dockerfile: vendor/docker/Dockerfile
     depends_on:
       - cowbull_svc
     image: 'dsanderscan/cowbull_webapp:1.0.136'
