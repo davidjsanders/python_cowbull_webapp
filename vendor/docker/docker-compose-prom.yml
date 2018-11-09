@@ -94,16 +94,16 @@ services:
         limits:
           cpus: "0.1"
           memory: 100M
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=webapp_cowbull_network"
-      - "traefik.frontend.rule=Host:cowbull"
-      - "traefik.backend=backend-cowbull-webapp-docker"
-      # - "traefik.backend.healthcheck.path=/health"
-      # - "traefik.backend.healthcheck.interval=5s"
-      # - "traefik.backend.healthcheck.port=8080"
-      # - "traefik.backend.healthcheck.method=GET"
-      - "traefik.weight=2"
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=webapp_cowbull_network"
+        - "traefik.frontend.rule=Host:cowbull"
+        - "traefik.backend=backend-cowbull-webapp-docker"
+        # - "traefik.backend.healthcheck.path=/health"
+        # - "traefik.backend.healthcheck.interval=5s"
+        # - "traefik.backend.healthcheck.port=8080"
+        # - "traefik.backend.healthcheck.method=GET"
+        - "traefik.weight=2"
     environment:
       - COWBULL_SERVER=cowbull_svc
       - COWBULL_PORT=8080
@@ -125,12 +125,12 @@ services:
         limits:
           cpus: "0.1"
           memory: 100M
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=webapp_cowbull_network"
-      - "traefik.frontend.rule=Host:cowbull"
-      - "traefik.backend=backend-cowbull-webapp-docker"
-      - "traefik.weight=1"
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=webapp_cowbull_network"
+        - "traefik.frontend.rule=Host:cowbull"
+        - "traefik.backend=backend-cowbull-webapp-docker"
+        - "traefik.weight=1"
     environment:
       - COWBULL_SERVER=cowbull_svc
       - COWBULL_PORT=8080
