@@ -117,6 +117,14 @@ services:
     image: 'dsanderscan/cowbull_webapp:1.0.136'
     depends_on:
       - cowbull_svc
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 100M
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=webapp_cowbull_network"
