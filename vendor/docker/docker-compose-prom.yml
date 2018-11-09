@@ -103,12 +103,13 @@ services:
         # - "traefik.backend.healthcheck.interval=5s"
         # - "traefik.backend.healthcheck.port=8080"
         # - "traefik.backend.healthcheck.method=GET"
-        - "traefik.weight=2"
+        - "traefik.weight=3"
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=webapp_cowbull_network"
       - "traefik.frontend.rule=Host:cowbull"
       - "traefik.backend=backend-cowbull-webapp-docker"
+      - "traefik.weight=3"
     environment:
       - COWBULL_SERVER=cowbull_svc
       - COWBULL_PORT=8080
