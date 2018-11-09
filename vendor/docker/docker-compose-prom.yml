@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 
 services:
   cadvisor:
@@ -76,7 +76,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=webapp_cowbull_network"
-      - "traefik.frontend.rule=Host:cowbull.traefik.local"
+      - "traefik.frontend.rule=Host:cowbull"
       - "traefik.backend=backend-cowbull-webapp-docker"
       # - "traefik.backend.healthcheck.path=/health"
       # - "traefik.backend.healthcheck.interval=5s"
@@ -100,7 +100,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=webapp_cowbull_network"
-      - "traefik.frontend.rule=Host:cowbull.traefik.local"
+      - "traefik.frontend.rule=Host:cowbull"
       - "traefik.backend=backend-cowbull-webapp-docker"
       - "traefik.weight=1"
     environment:
@@ -112,7 +112,5 @@ services:
       - COWBULL_ENVIRONMENT=--LOCAL--
     networks:
       - webapp_cowbull_network
-
 networks:
   webapp_cowbull_network:
-    external: true
