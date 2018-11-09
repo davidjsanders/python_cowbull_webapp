@@ -3,7 +3,6 @@ version: '3.7'
 services:
   cadvisor:
     image: google/cadvisor
-    container_name: cadvisor
     ports:
       - 18080:8080
     volumes:
@@ -18,7 +17,6 @@ services:
 
   prometheus:
     image: prom/prometheus:latest
-    container_name: prometheus
     ports:
       - 9090:9090
     command:
@@ -77,6 +75,7 @@ services:
       dockerfile: vendor/docker/Dockerfile
     depends_on:
       - cowbull_svc
+    image: 'dsanderscan/cowbull_webapp:1.0.136'
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=webapp_cowbull_network"
