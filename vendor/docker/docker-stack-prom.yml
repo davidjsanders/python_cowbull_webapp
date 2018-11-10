@@ -89,7 +89,6 @@ services:
     labels:
       traefik.enable: "false"
       traefik.docker.network: i_cowbull_network
-    restart: always
 
   cowbull_svc:
     image: 'dsanderscan/cowbull:1.0.172'
@@ -97,8 +96,6 @@ services:
       - redis
     deploy:
       replicas: 3
-      restart_policy:
-        condition: any
       placement:
         constraints: [node.role == worker]
       resources:
@@ -113,12 +110,11 @@ services:
       traefik.docker.network: i_cowbull_network
     networks:
       - i_cowbull_network
-    restart: always
 
   cowbull_webapp:
     depends_on:
       - cowbull_svc
-    image: 'dsanderscan/cowbull_webapp:1.0.136'
+    image: 'dsanderscan/cowbull_webapp:1.0.168'
     deploy:
       replicas: 3
       restart_policy:
@@ -140,8 +136,8 @@ services:
       - COWBULL_SERVER=cowbull_svc
       - COWBULL_PORT=8080
       - COWBULL_VERSION=v1
-      - BUILD_NUMBER=1.0.172-COMPOSE
-      - COWBULL_ENVIRONMENT=--LOCAL--
+      - BUILD_NUMBER=1.0.172-168-STACK
+      - COWBULL_ENVIRONMENT=Swarm
     networks:
       - i_cowbull_network
 
@@ -170,8 +166,8 @@ services:
       - COWBULL_SERVER=cowbull_svc
       - COWBULL_PORT=8080
       - COWBULL_VERSION=v1
-      - BUILD_NUMBER=1.0.172-GREEN
+      - BUILD_NUMBER=1.0.172-136-STACK
       - NAVBAR_COLOUR=bg-success
-      - COWBULL_ENVIRONMENT=--LOCAL--
+      - COWBULL_ENVIRONMENT=Swarm
     networks:
       - i_cowbull_network
