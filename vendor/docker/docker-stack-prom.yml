@@ -1,14 +1,14 @@
-version: '3'
+version: '3.7'
+
+configs:
+  prometheus:
+    external: true
+  traefik:
+    external: true
 
 networks:
   i_cowbull_network:
   i_management_network:
-
-volumes:
-  prometheus_volume:
-  prometheus_config:
-    external:
-      name: prometheus_config
 
 services:
   socat:
@@ -43,13 +43,11 @@ services:
 
   prometheus:
     image: prom/prometheus:latest
-    volumes:
-      - prometheus_config:/etc/prometheus
-      # - type: volume
-      #   source: prometheus_config
-      #   target: /etc/prometheus
     ports:
       - 9090:9090
+    configs:
+      - source: prometheus
+        target: /etc/prometheus/prometheus.yml
     deploy:
       placement:
         constraints: [node.role == manager]
@@ -62,19 +60,16 @@ services:
 
   traefik:
     image: traefik  # The official Traefik docker image
-    command: --api --metrics --metrics.prometheus --metrics.prometheus.buckets="0.1,0.3,1.2,5.0" --docker --docker.endpoint=tcp://socat:2375 --docker.watch --docker.swarmMode 
     deploy:
       placement:
         constraints:
           - node.role == worker
+    configs:
+      - source: traefik
+        target: /traefik.toml
     ports:
       - "80:80"      # The HTTP port
       - "8080:8080"  # The Web UI (enabled by --api)
-#    volumes:
-#      - /var/run/docker.sock:/var/run/docker.sock  # So that Traefik can listen to the Docker events
-#      - /dockerdata/config/traefik.toml:/etc/traefik/traefik.toml
-#    labels:
-#      - "traefik.docker.network=i_cowbull_network"
     networks:
       - i_cowbull_network
       - i_management_network
