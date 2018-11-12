@@ -9,6 +9,11 @@ scrape_configs:
   static_configs:
   - targets:
     - traefik:8080
+- job_name: node
+  scrape_interval: 5s
+  static_configs:
+  - targets:
+    - node-exporter:9100
 - job_name: docker
   scrape_interval: 5s
   static_configs:

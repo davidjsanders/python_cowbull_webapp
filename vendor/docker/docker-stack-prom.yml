@@ -9,6 +9,8 @@ configs:
 networks:
   i_cowbull_network:
   i_management_network:
+  host:
+    external: true
 
 services:
   socat:
@@ -41,6 +43,45 @@ services:
       - traefik
     networks:
       - i_management_network
+
+  grafana:
+    image: grafana/grafana
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    ports:
+      - 3000:3000
+    environment:
+      - "GF_SERVER_ROOT_URL=http://192.168.99.100"
+      - "GF_SECURITY_ADMIN_PASSWORD=secret"
+    depends_on:
+      - cadvisor
+      - prometheus
+    networks:
+      - i_management_network
+
+  node-exporter:
+    image: prom/node-exporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command: 
+      - '--path.procfs=/host/proc' 
+      - '--path.sysfs=/host/sys'
+      - --collector.filesystem.ignored-mount-points
+      - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
+    ports:
+      - 9100:9100
+    networks:
+      - i_management_network
+    deploy:
+      mode: global
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 64M
 
   prometheus:
     image: prom/prometheus:latest
