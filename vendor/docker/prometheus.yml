@@ -9,3 +9,7 @@ scrape_configs:
   static_configs:
   - targets:
     - traefik:8080
+- job_name: docker
+  scrape_interval: 5s
+  static_configs:
+  - targets: ["192.168.99.100:9323","192.168.99.101:9323","192.168.99.102:9323"]
