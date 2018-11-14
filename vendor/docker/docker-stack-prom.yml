@@ -150,7 +150,7 @@ services:
     depends_on:
       - redis
     deploy:
-      replicas: 3
+      replicas: 5
       placement:
         constraints: [node.role == worker]
       resources:
