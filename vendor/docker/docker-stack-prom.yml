@@ -12,8 +12,14 @@ networks:
   host:
     external: true
 
+volumes:
+  i_grafana_data: {}
+
 services:
   socat:
+    # Reference: https://blog.mikesir87.io/2018/07/letting-traefik-run-on-worker-nodes/
+    # Using socat allows the redirection of the docker sock and means only socat has
+    # to run on managers
     image: alpine/socat
     command: tcp-listen:2375,fork,reuseaddr unix-connect:/var/run/docker.sock
     volumes:
@@ -49,6 +55,8 @@ services:
     deploy:
       placement:
         constraints: [node.role == manager]
+    volumes:
+      - i_grafana_data:/var/lib/grafana
     ports:
       - 3000:3000
     environment:
@@ -101,6 +109,11 @@ services:
       - i_management_network
 
   traefik:
+    # Reference: https://blog.mikesir87.io/2018/07/letting-traefik-run-on-worker-nodes/
+    # Using socat allows the redirection of the docker sock and means only socat has
+    # to run on managers. Here, traefik is running on any worker node and using the
+    # swarm mesh to route traffic in.
+    #
     image: traefik  # The official Traefik docker image
     deploy:
       placement:
