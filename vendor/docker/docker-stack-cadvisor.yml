@@ -1,0 +1,24 @@
+version: '3.7'
+
+networks:
+  i_cowbull_network:
+  i_management_network:
+  host:
+    external: true
+
+services:
+  cadvisor:
+    image: google/cadvisor
+    deploy:
+      mode: global
+    ports:
+      - 18080:8080
+    volumes:
+     - /:/rootfs:ro
+     - /var/run:/var/run:rw
+     - /sys:/sys:ro
+     - /var/lib/docker/:/var/lib/docker:ro
+    depends_on:
+      - traefik
+    networks:
+      - i_management_network
