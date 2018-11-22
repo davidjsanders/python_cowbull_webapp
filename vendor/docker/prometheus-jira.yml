@@ -1,0 +1,7 @@
+- job_name: jira
+  scheme: http
+  metrics_path: '/plugins/servlet/prometheus/metrics'
+  params:
+    token: ['2NOqfGc154viR3UC4ENgrty3iLZDieTNiar']
+  static_configs:
+    - targets: ["issues-test.gwl.ca"]

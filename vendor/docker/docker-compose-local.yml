@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   reverse-proxy:
-    image: traefik  # The official Traefik docker image
+    image: traefik1.7.3  # The official Traefik docker image
     command: --api  # Enables the web UI
     ports:
       - "80:80"      # The HTTP port
