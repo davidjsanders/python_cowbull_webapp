@@ -1,0 +1,146 @@
+version: '3.7'
+
+configs:
+  traefik:
+    external: true
+
+networks:
+  i_cowbull_network:
+  i_management_network:
+  host:
+    external: true
+
+services:
+  socat:
+    # Reference: https://blog.mikesir87.io/2018/07/letting-traefik-run-on-worker-nodes/
+    # Using socat allows the redirection of the docker sock and means only socat has
+    # to run on managers
+    image: alpine/socat
+    command: tcp-listen:2375,fork,reuseaddr unix-connect:/var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - i_management_network
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+
+  traefik:
+    # Reference: https://blog.mikesir87.io/2018/07/letting-traefik-run-on-worker-nodes/
+    # Using socat allows the redirection of the docker sock and means only socat has
+    # to run on managers. Here, traefik is running on any worker node and using the
+    # swarm mesh to route traffic in.
+    #
+    image: traefik  # The official Traefik docker image
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+    configs:
+      - source: traefik
+        target: /traefik.toml
+    ports:
+      - "80:80"      # The HTTP port
+      - "8080:8080"  # The Web UI (enabled by --api)
+    networks:
+      - i_cowbull_network
+      - i_management_network
+    depends_on:
+      - i_cowbull_network
+      - redis
+      - cowbull_svc
+      - cowbull_webapp
+
+  redis:
+    image: 'redis:latest'
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - i_cowbull_network
+    labels:
+      traefik.enable: "false"
+      traefik.docker.network: i_cowbull_network
+
+  cowbull_svc:
+    image: 'dsanderscan/cowbull:1.0.172'
+    depends_on:
+      - redis
+    deploy:
+      replicas: 5
+      placement:
+        constraints: [node.role == manager]
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 100M
+    environment:
+      - LOGGING_LEVEL=10
+      - 'PERSISTER={"engine_name": "redis", "parameters": {"host": "redis", "port": 6379, "db": 0}}'
+    labels:
+      traefik.enable: "false"
+      traefik.docker.network: i_cowbull_network
+    networks:
+      - i_cowbull_network
+
+  cowbull_webapp:
+    depends_on:
+      - cowbull_svc
+    image: 'dsanderscan/cowbull_webapp:1.0.168'
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: any
+      placement:
+        constraints: [node.role == manager]
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 100M
+      labels:
+        traefik.enable: "true"
+        traefik.docker.network: i_cowbull_network
+        traefik.frontend.rule: "Host: cowbull"
+        traefik.port: 8080
+        traefik.backend: "backend-cowbull-webapp-docker"
+        traefik.weight: 1
+    environment:
+      - COWBULL_SERVER=cowbull_svc
+      - COWBULL_PORT=8080
+      - COWBULL_VERSION=v1
+      - BUILD_NUMBER=1.0.172-168-STACK
+      - COWBULL_ENVIRONMENT=Swarm
+    networks:
+      - i_cowbull_network
+
+  cowbull_webapp_g:
+    image: 'dsanderscan/cowbull_webapp:1.0.136'
+    depends_on:
+      - cowbull_svc
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+      placement:
+        constraints: [node.role == manager]
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 100M
+      labels:
+        traefik.enable: "true"
+        traefik.docker.network: i_cowbull_network
+        traefik.frontend.rule: "Host: cowbull"
+        traefik.port: 8080
+        traefik.backend: "backend-cowbull-webapp-docker"
+        traefik.weight: 1
+    environment:
+      - COWBULL_SERVER=cowbull_svc
+      - COWBULL_PORT=8080
+      - COWBULL_VERSION=v1
+      - BUILD_NUMBER=1.0.172-136-STACK
+      - NAVBAR_COLOUR=bg-success
+      - COWBULL_ENVIRONMENT=Swarm
+    networks:
+      - i_cowbull_network
