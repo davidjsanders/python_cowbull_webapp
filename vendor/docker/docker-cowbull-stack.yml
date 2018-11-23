@@ -1,7 +1,7 @@
 version: '3.7'
 
 networks:
-  frontend_web:
+  frontend_cowbull:
     external: true
   i_cowbull_network:
 
@@ -48,7 +48,7 @@ services:
           memory: 100M
       labels:
         traefik.enable: "true"
-        traefik.docker.network: frontend_web
+        traefik.docker.network: frontend_cowbull
         traefik.frontend.rule: "Host: cowbull"
         traefik.port: 8080
         traefik.backend: "backend-cowbull-webapp-docker"
@@ -60,7 +60,7 @@ services:
       - BUILD_NUMBER=1.0.172-168-STACK
       - COWBULL_ENVIRONMENT=Swarm
     networks:
-      - frontend_web
+      - frontend_cowbull
       - i_cowbull_network
 
   cowbull_webapp_g:
@@ -79,7 +79,7 @@ services:
           memory: 100M
       labels:
         traefik.enable: "true"
-        traefik.docker.network: frontend_web
+        traefik.docker.network: frontend_cowbull
         traefik.frontend.rule: "Host: cowbull"
         traefik.port: 8080
         traefik.backend: "backend-cowbull-webapp-docker"
@@ -92,5 +92,5 @@ services:
       - NAVBAR_COLOUR=bg-success
       - COWBULL_ENVIRONMENT=Swarm
     networks:
-      - frontend_web
+      - frontend_cowbull
       - i_cowbull_network
