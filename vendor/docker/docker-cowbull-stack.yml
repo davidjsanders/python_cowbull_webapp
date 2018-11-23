@@ -8,9 +8,9 @@ networks:
 services:
   redis:
     image: 'redis:latest'
-    deploy:
-      placement:
-        constraints: [node.role == worker]
+    # deploy:
+    #   placement:
+    #     constraints: [node.role == worker]
     networks:
       - i_cowbull_network
 
@@ -20,8 +20,8 @@ services:
       - redis
     deploy:
       replicas: 5
-      placement:
-        constraints: [node.role == worker]
+      # placement:
+      #   constraints: [node.role == worker]
       resources:
         limits:
           cpus: "0.1"
@@ -40,8 +40,8 @@ services:
       replicas: 3
       restart_policy:
         condition: any
-      placement:
-        constraints: [node.role == worker]
+      # placement:
+      #   constraints: [node.role == worker]
       resources:
         limits:
           cpus: "0.1"
@@ -71,8 +71,8 @@ services:
       replicas: 1
       restart_policy:
         condition: any
-      placement:
-        constraints: [node.role == worker]
+      # placement:
+      #   constraints: [node.role == worker]
       resources:
         limits:
           cpus: "0.1"
