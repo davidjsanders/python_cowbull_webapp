@@ -2,6 +2,7 @@ version: '3.7'
 
 networks:
   frontend_web:
+    external: true
   i_cowbull_network:
 
 services:
