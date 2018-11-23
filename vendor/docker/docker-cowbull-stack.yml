@@ -48,7 +48,7 @@ services:
           memory: 100M
       labels:
         traefik.enable: "true"
-        traefik.docker.network: i_cowbull_network
+        traefik.docker.network: frontend_web
         traefik.frontend.rule: "Host: cowbull"
         traefik.port: 8080
         traefik.backend: "backend-cowbull-webapp-docker"
@@ -79,7 +79,7 @@ services:
           memory: 100M
       labels:
         traefik.enable: "true"
-        traefik.docker.network: i_cowbull_network
+        traefik.docker.network: frontend_web
         traefik.frontend.rule: "Host: cowbull"
         traefik.port: 8080
         traefik.backend: "backend-cowbull-webapp-docker"
