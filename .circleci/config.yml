@@ -37,6 +37,7 @@ jobs:
             export doclog=${doclog}
             echo "Testing ${BUILD_NUMBER}"
             docker-compose -f vendor/docker/docker-compose-cicd.yml up -d
+            echo "Finding web app"
             webapp=$(docker ps -a --format '{{.Names}}' | grep "docker_cowbull_webapp_1_")
             echo "export webapp=$webapp" >> $BASH_ENV
 
