@@ -15,7 +15,7 @@ class TestFundamentals(TestCase):
         pass
 
     def test_app_health(self):
-        response = self.app.get('/health', follow_redirects=True)
+        response = self.app.get('/', follow_redirects=True)
         self.assertEqual(response.status_code, 200)
 
     if __name__ == "__main__":
