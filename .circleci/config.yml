@@ -39,7 +39,7 @@ jobs:
             docker-compose -f vendor/docker/docker-compose-cicd.yml up -d
             echo "Finding web app"
             docker ps -a --format '{{.Names}}'
-            webapp=$(docker ps -a --format '{{.Names}}' | grep "docker_cowbull_webapp_1_")
+            webapp=$(docker ps -a --format '{{.Names}}' | grep "docker_cowbull_webapp_1")
             echo "export webapp=$webapp" >> $BASH_ENV
 
       - run:
