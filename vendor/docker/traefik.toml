@@ -23,7 +23,7 @@
 [docker]
   endpoint = "tcp://socat:2375"
   watch = true
-  swarmMode = true
+  swarmMode = false
   exposedByDefault = false
   usebindportip = true
 # Define a default docker network to use for connections to all containers.

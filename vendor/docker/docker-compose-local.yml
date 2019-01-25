@@ -1,15 +1,24 @@
 version: '3.7'
 
 services:
-  reverse-proxy:
-    image: traefik:1.7.3  # The official Traefik docker image
-    command: --api  --docker # Enables the web UI
+  socat:
+    # Reference: https://blog.mikesir87.io/2018/07/letting-traefik-run-on-worker-nodes/
+    # Using socat allows the redirection of the docker sock and means only socat has
+    # to run on managers
+    image: alpine/socat
+    command: tcp-listen:2375,fork,reuseaddr unix-connect:/var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - webapp_cowbull_network
+  traefik:
+    image: traefik:v1.7.7-alpine  # The official Traefik docker image
+    # command: --api  --docker # Enables the web UI
     ports:
       - "80:80"      # The HTTP port
       - "8080:8080"  # The Web UI (enabled by --api)
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock  # So that Traefik can listen to the Docker events
-      - ./traefik.toml:/etc/traefik/traefik.toml
+      - ./vendor/docker/traefik.toml:/etc/traefik/traefik.toml
     labels:
       - "traefik.docker.network=webapp_cowbull_network"
     networks:
