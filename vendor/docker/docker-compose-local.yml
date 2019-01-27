@@ -15,8 +15,8 @@ services:
     image: traefik:v1.7.7-alpine  # The official Traefik docker image
     command: --logLevel="DEBUG" # --api  --docker # Enables the web UI
     ports:
-      - "80:80"      # The HTTP port
-      - "8080:8080"  # The Web UI (enabled by --api)
+      - "18000:80"      # The HTTP port
+      - "18080:8080"  # The Web UI (enabled by --api)
     volumes:
       - "$PWD/vendor/docker/traefik.toml:/etc/traefik/traefik.toml"
     labels:
