@@ -13,12 +13,12 @@ services:
       - webapp_cowbull_network
   traefik:
     image: traefik:v1.7.7-alpine  # The official Traefik docker image
-    # command: --api  --docker # Enables the web UI
+    command: --logLevel="DEBUG" # --api  --docker # Enables the web UI
     ports:
       - "80:80"      # The HTTP port
       - "8080:8080"  # The Web UI (enabled by --api)
     volumes:
-      - ./vendor/docker/traefik.toml:/etc/traefik/traefik.toml
+      - "$PWD/vendor/docker/traefik.toml:/etc/traefik/traefik.toml"
     labels:
       - "traefik.docker.network=webapp_cowbull_network"
     networks:
