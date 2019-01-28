@@ -17,7 +17,7 @@ def set_config(app=None):
     #
     # Set the configuration for logging
     #
-    logging.basicConfig(
+    logging.basic_config(
         level=int(os.getenv(
             "logging_level",
             os.getenv(
