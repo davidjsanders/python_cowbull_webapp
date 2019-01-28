@@ -27,4 +27,4 @@ logLevel = "WARN"
   watch = true
   swarmMode = false
   exposedByDefault = false
-  usebindportip = true
+  usebindportip = false
