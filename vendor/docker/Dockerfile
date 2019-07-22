@@ -17,17 +17,24 @@ COPY	templates /cowbull/templates/
 COPY	initialization_package /cowbull/initialization_package/
 COPY	static /cowbull/static/
 COPY 	tests /cowbull/tests/
+COPY 	healthcheck /cowbull/healthcheck/
 
 COPY        	app.py  /cowbull/
 COPY		__init__.py /cowbull/
 COPY        	LICENSE /cowbull/
+
+USER 	root
+RUN 	chmod +x \
+			/cowbull/healthcheck/healthcheck.sh \
+			/cowbull/healthcheck/liveness.sh
+USER	cowbull
 
 HEALTHCHECK \
 	--interval=10s \
 	--timeout=5s \
 	--start-period=10s \
 	--retries=3 \
-	CMD [ "/bin/bash", "-c", "curl http://localhost:8080" ]
+	CMD [ "/bin/bash", "-c", "/cowbull/healthcheck/healthcheck.sh" ]
 
 CMD		["gunicorn", "-b", "0.0.0.0:8080", "-w", "4", "app:app"]
 EXPOSE		8080
