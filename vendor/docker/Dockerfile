@@ -1,6 +1,7 @@
 FROM		python:3.5.3-slim
 MAINTAINER	David Sanders
 RUN		apt-get update && \
+		apt-get install --yes curl && \
 		groupadd -r cowbull_wa && \
 		mkdir /cowbull && \
 		useradd -r -G cowbull_wa -d /cowbull cowbull && \
@@ -20,5 +21,14 @@ COPY 	tests /cowbull/tests/
 COPY        	app.py  /cowbull/
 COPY		__init__.py /cowbull/
 COPY        	LICENSE /cowbull/
+
+HEALTHCHECK \
+	--interval=10s \
+	--timeout=5s \
+	--start-period=10s \
+	--retries=3 \
+	CMD [ "/bin/bash", "-c", "curl http://localhost:8080" ]
+
 CMD		["gunicorn", "-b", "0.0.0.0:8080", "-w", "4", "app:app"]
 EXPOSE		8080
+LABEL MAINTAINER="dsanderscanada@gmail.com"

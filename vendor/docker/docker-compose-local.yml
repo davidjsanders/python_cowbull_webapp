@@ -32,7 +32,7 @@ services:
       - "traefik.docker.network=webapp_cowbull_network"
     restart: always
   cowbull_svc:
-    image: 'dsanderscan/cowbull:2.0.57'
+    image: 'dsanderscan/cowbull:2.0.76'
     depends_on:
       - redis
     environment:
@@ -62,7 +62,7 @@ services:
       - COWBULL_PORT=8080
       - COWBULL_VERSION=v1
       - BUILD_NUMBER=1.0.172-COMPOSE
-      - COWBULL_ENVIRONMENT=2.0.57
+      - COWBULL_ENVIRONMENT=2.0.76
     networks:
       - webapp_cowbull_network
   cowbull_webapp_g:
@@ -82,7 +82,7 @@ services:
       - COWBULL_VERSION=v1
       - BUILD_NUMBER=1.0.172-GREEN
       - NAVBAR_COLOUR=bg-success
-      - COWBULL_ENVIRONMENT=2.0.57
+      - COWBULL_ENVIRONMENT=2.0.76
     networks:
       - webapp_cowbull_network
 networks:
