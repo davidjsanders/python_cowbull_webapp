@@ -26,7 +26,7 @@ podTemplate(containers: [
     // containerTemplate(name: 'cowbull-server', image: 'k8s-master:32080/python:3.7.4-alpine3.10', ttyEnabled: true, command: 'cat'),
     containerTemplate(
         name: 'cowbull-server', 
-        image: 'k8s-master:32080/dsanderscan/cowbull:19.08.37', 
+        image: 'k8s-master:32080/dsanderscan/cowbull:19.08.38', 
         command: 'cat',
         ttyEnabled: true,
         privileged: false,
