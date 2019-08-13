@@ -36,7 +36,7 @@ podTemplate(containers: [
     containerTemplate(name: 'python', image: 'k8s-master:32080/python:3.7.4-alpine3.10', ttyEnabled: true, command: 'cat'),
     containerTemplate(
         name: 'cowbull', 
-        image: 'k8s-master:32080/dsanderscan/cowbull:19.08.37', 
+        image: 'dsanderscan/cowbull:19.08.37', 
         ttyEnabled: true,
         envVars: [
             envVar(key: 'PERSISTER', value: '{"engine_name": "redis", "parameters": {"host": "localhost", "port": 6379, "db": 0, "password": ""}}'),
