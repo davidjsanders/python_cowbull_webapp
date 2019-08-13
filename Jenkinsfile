@@ -27,7 +27,7 @@ podTemplate(containers: [
     containerTemplate(
         name: 'cowbull-server', 
         image: 'k8s-master:32080/dsanderscan/cowbull:19.08.38', 
-        command: '/bin/sh -c "while true; do sleep 10; echo Sleeping; done"',
+        // command: 'cat',
         ttyEnabled: true,
         privileged: false,
         alwaysPullImage: false,
