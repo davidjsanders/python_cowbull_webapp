@@ -39,7 +39,7 @@ podTemplate(containers: [
         image: 'k8s-master:32080/dsanderscan/cowbull:19.08.37', 
         ttyEnabled: true,
         workingDir: '/cowbull',
-        command: 'cd /cowbull; gunicorn -b 0.0.0.0:8080 -w 4 app:app'
+        command: 'cd /cowbull; gunicorn -b 0.0.0.0:8080 -w 4 app:app',
         envVars: [
             envVar(key: 'PYTHONPATH', value: '/cowbull'),
             envVar(key: 'PERSISTER', value: '{"engine_name": "redis", "parameters": {"host": "localhost", "port": 6379, "db": 0, "password": ""}}'),
