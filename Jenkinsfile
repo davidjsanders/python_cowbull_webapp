@@ -27,7 +27,7 @@ podTemplate(containers: [
     containerTemplate(
         name: 'cowbull-server', 
         image: 'k8s-master:32080/dsanderscan/cowbull:19.08.37', 
-        command: 'cat'
+        command: 'cat',
         ttyEnabled: true,
         privileged: false,
         alwaysPullImage: false,
