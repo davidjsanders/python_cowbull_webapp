@@ -54,15 +54,15 @@ podTemplate(containers: [
             """
         }
     }
-    stage('Execute unit tests') {
-        container('python') {
-            sh """
-                export COWBULL_SERVER=localhost
-                export COWBULL_PORT=8080
-                export PYTHONPATH=\$(pwd):\$(pwd)/tests
-                python -m unittest tests
-            """
-        }
-    }
+    // stage('Execute unit tests') {
+    //     container('python') {
+    //         sh """
+    //             export COWBULL_SERVER=localhost
+    //             export COWBULL_PORT=8080
+    //             export PYTHONPATH=\$(pwd):\$(pwd)/tests
+    //             python -m unittest tests
+    //         """
+    //     }
+    // }
   }
 }
