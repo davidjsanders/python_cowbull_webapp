@@ -36,7 +36,7 @@ podTemplate(containers: [
     containerTemplate(name: 'python', image: 'k8s-master:32080/python:3.7.4-alpine3.10', ttyEnabled: true, command: 'cat'),
     containerTemplate(
         name: 'cowbull', 
-        image: 'k8s-master:32080/dsanderscan/cowbull:19.08.37', 
+        image: 'k8s-master:32080/dsanderscan/cowbull:2.0.119', 
         ttyEnabled: true,
         workingDir: '/cowbull',
         // command: 'gunicorn -b 0.0.0.0:8080 -w 4 app:app',
