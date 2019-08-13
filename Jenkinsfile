@@ -39,8 +39,8 @@ podTemplate(containers: [
         image: 'k8s-master:32080/dsanderscan/cowbull:19.08.37', 
         ttyEnabled: true,
         envVars: [
-            envVar(key: PERSISTER, value: '{"engine_name": "redis", "parameters": {"host": "localhost", "port": 6379, "db": 0, "password": ""}}'),
-            envVar(key: LOGGING_LEVEL, value: 10)
+            envVar(key: 'PERSISTER', value: '{"engine_name": "redis", "parameters": {"host": "localhost", "port": 6379, "db": 0, "password": ""}}'),
+            envVar(key: 'LOGGING_LEVEL', value: 10)
         ]
     ),
     containerTemplate(name: 'maven', image: 'k8s-master:32080/maven:3.6.1-jdk-11-slim', ttyEnabled: true, command: 'cat'),
