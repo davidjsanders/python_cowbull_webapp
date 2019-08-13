@@ -27,7 +27,8 @@ podTemplate(containers: [
         name: 'cowbull-server', 
         workingDir: '/cowbull',
         image: 'k8s-master:32080/dsanderscan/cowbull:19.08.37', 
-        ttyEnabled: true
+        ttyEnabled: true,
+        command: 'cat'
     ),
     // containerTemplate(name: 'maven', image: 'k8s-master:32080/maven:3.6.1-jdk-11-slim', ttyEnabled: true, command: 'cat'),
     // containerTemplate(name: 'docker', image: 'k8s-master:32080/docker:19.03.1-dind', ttyEnabled: true, privileged: true),
@@ -51,6 +52,14 @@ podTemplate(containers: [
     stage('Verify Redis is running') {
         container('redis') {
             sh 'redis-cli ping'
+        }
+    }
+    stage('Check cowbull server') {
+        container('cowbull-server') {
+            sh """
+                pwd
+                ls -als
+            """
         }
     }
     // stage('Execute Python unit tests') {
