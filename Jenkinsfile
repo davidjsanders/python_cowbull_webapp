@@ -24,22 +24,22 @@ podTemplate(containers: [
     containerTemplate(name: 'redis', image: 'k8s-master:32080/redis:5.0.3-alpine', ttyEnabled: true, command: 'redis-server'),
     containerTemplate(name: 'python', image: 'k8s-master:32080/python:3.7.4-alpine3.10', ttyEnabled: true, command: 'cat'),
     // containerTemplate(name: 'cowbull-server', image: 'k8s-master:32080/python:3.7.4-alpine3.10', ttyEnabled: true, command: 'cat'),
-    containerTemplate(
-        name: 'cowbull-server', 
-        image: 'k8s-master:32080/dsanderscan/cowbull:19.08.38', 
-        workingDir: '/cowbull/',
-        command: 'cat',
-        ttyEnabled: false,
-        privileged: true,
-        alwaysPullImage: false,
-        resourceRequestCpu: '200m',
-        resourceLimitCpu: '500m',
-        resourceRequestMemory: '500Mi',
-        resourceLimitMemory: '2000Mi',
-        ports: [portMapping(name: 'cowbull', containerPort: 8080, hostPort: 8080)]
-     ),
+    // containerTemplate(
+    //     name: 'cowbull-server', 
+    //     image: 'k8s-master:32080/dsanderscan/cowbull:19.08.38', 
+    //     workingDir: '/cowbull/',
+    //     command: 'cat',
+    //     ttyEnabled: false,
+    //     privileged: true,
+    //     alwaysPullImage: false,
+    //     resourceRequestCpu: '200m',
+    //     resourceLimitCpu: '500m',
+    //     resourceRequestMemory: '500Mi',
+    //     resourceLimitMemory: '2000Mi',
+    //     ports: [portMapping(name: 'cowbull', containerPort: 8080, hostPort: 8080)]
+    //  ),
     // containerTemplate(name: 'maven', image: 'k8s-master:32080/maven:3.6.1-jdk-11-slim', ttyEnabled: true, command: 'cat'),
-    // containerTemplate(name: 'docker', image: 'k8s-master:32080/docker:19.03.1-dind', ttyEnabled: true, privileged: true),
+    containerTemplate(name: 'docker', image: 'k8s-master:32080/docker:19.03.1-dind', ttyEnabled: true, privileged: true),
     // containerTemplate(name: 'mono', image: 'k8s-master:32080/mono:6.0.0.313', ttyEnabled: true, privileged: true),
   ]) {
   node(POD_LABEL) {
@@ -62,11 +62,10 @@ podTemplate(containers: [
             sh 'redis-cli ping'
         }
     }
-    stage('Check cowbull server') {
-        container('cowbull-server') {
+    stage('Check Docker server') {
+        container('docker') {
             sh """
-                pwd
-                ls -als
+                docker run -p 8080:8080 --name cowbull -d k8s-master:32080/dsanderscan/cowbull:19.08.38
             """
         }
     }
