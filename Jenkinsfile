@@ -62,26 +62,29 @@ podTemplate(containers: [
             sh 'redis-cli ping'
         }
     }
-    stage('Check Docker server') {
+    stage('Run cowbull as a Docker container') {
         container('docker') {
             sh """
                 docker run -p 8080:8080 --name cowbull -d dsanderscan/cowbull:19.08.38
             """
         }
     }
-    // stage('Execute Python unit tests') {
-    //     container('python') {
-    //         try {
-    //             sh """
-    //                 export PYTHONPATH="\$(pwd)"
-    //                 coverage run unittests/main.py
-    //                 coverage xml -i
-    //             """
-    //         } finally {
-    //             junit 'unittest-reports/*.xml'
-    //         }
-    //     }
-    // }
+    stage('Execute Python unit tests') {
+        container('python') {
+            try {
+                sh """
+                    export PYTHONPATH="\$(pwd)"
+                    export COWBULL_SERVER=localhost
+                    export COWBULL_PORT=8080
+                    python -m unittests tests/
+                    // coverage run unittests/main.py
+                    // coverage xml -i
+                """
+            } finally {
+                junit 'unittest-reports/*.xml'
+            }
+        }
+    }
     // stage('Execute Python system tests') {
     //     container('python') {
     //         try {
