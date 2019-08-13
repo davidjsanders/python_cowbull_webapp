@@ -38,6 +38,7 @@ podTemplate(containers: [
         name: 'cowbull', 
         image: 'dsanderscan/cowbull:19.08.37', 
         ttyEnabled: true,
+        workingDir: '/cowbull',
         envVars: [
             envVar(key: 'PERSISTER', value: '{"engine_name": "redis", "parameters": {"host": "localhost", "port": 6379, "db": 0, "password": ""}}'),
             envVar(key: 'LOGGING_LEVEL', value: '10')
