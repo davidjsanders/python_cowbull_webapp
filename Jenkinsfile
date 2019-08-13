@@ -65,7 +65,7 @@ podTemplate(containers: [
     stage('Check Docker server') {
         container('docker') {
             sh """
-                docker run -p 8080:8080 --name cowbull -d k8s-master:32080/dsanderscan/cowbull:19.08.38
+                docker run -p 8080:8080 --name cowbull -d dsanderscan/cowbull:19.08.38
             """
         }
     }
