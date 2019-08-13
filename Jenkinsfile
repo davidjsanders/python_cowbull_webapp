@@ -34,19 +34,20 @@ def imageName = ''
 podTemplate(containers: [
     containerTemplate(name: 'redis', image: 'k8s-master:32080/redis:5.0.3-alpine', ttyEnabled: true, command: 'redis-server'),
     containerTemplate(name: 'python', image: 'k8s-master:32080/python:3.7.4-alpine3.10', ttyEnabled: true, command: 'cat'),
-    containerTemplate(name: 'cowbull-server', image: 'k8s-master:32080/python:3.7.4-alpine3.10', ttyEnabled: true, command: 'cat'),
-    // containerTemplate(
-    //     name: 'cowbull', 
-    //     image: 'k8s-master:32080/dsanderscan/cowbull:2.0.119', 
-    //     ttyEnabled: true,
-    //     workingDir: '/cowbull',
-    //     // command: 'gunicorn -b 0.0.0.0:8080 -w 4 app:app',
-    //     envVars: [
-    //         envVar(key: 'PYTHONPATH', value: '/cowbull'),
-    //         envVar(key: 'PERSISTER', value: '{"engine_name": "redis", "parameters": {"host": "localhost", "port": 6379, "db": 0, "password": ""}}'),
-    //         envVar(key: 'LOGGING_LEVEL', value: '10')
-    //     ]
-    // ),
+    // containerTemplate(name: 'cowbull-server', image: 'k8s-master:32080/dsanderscan/cowbull:2.0.119', ttyEnabled: true, command: 's'),
+    containerTemplate(
+        name: 'cowbull', 
+        image: 'k8s-master:32080/dsanderscan/cowbull:2.0.119', 
+        ttyEnabled: true,
+        workingDir: '/cowbull',
+        command: 'gunicorn',
+        args: '-b 8080 -w 4 app:app',
+        envVars: [
+            envVar(key: 'PYTHONPATH', value: '/cowbull'),
+            envVar(key: 'PERSISTER', value: '{"engine_name": "redis", "parameters": {"host": "localhost", "port": 6379, "db": 0, "password": ""}}'),
+            envVar(key: 'LOGGING_LEVEL', value: '10')
+        ]
+    ),
     containerTemplate(name: 'maven', image: 'k8s-master:32080/maven:3.6.1-jdk-11-slim', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'docker', image: 'k8s-master:32080/docker:19.03.1-dind', ttyEnabled: true, privileged: true),
   ]) {
