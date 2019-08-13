@@ -26,11 +26,18 @@ podTemplate(containers: [
     // containerTemplate(name: 'cowbull-server', image: 'k8s-master:32080/python:3.7.4-alpine3.10', ttyEnabled: true, command: 'cat'),
     containerTemplate(
         name: 'cowbull-server', 
-        workingDir: '/home/jenkins/agent/workspace/python_cowbull_webapp_master',
         image: 'k8s-master:32080/dsanderscan/cowbull:19.08.37', 
-        ttyEnabled: true,
         command: 'cat'
-    ),
+        ttyEnabled: true,
+        privileged: false,
+        alwaysPullImage: false,
+        workingDir: '/home/jenkins/agent',
+        resourceRequestCpu: '200m',
+        resourceLimitCpu: '500m',
+        resourceRequestMemory: '500Mi',
+        resourceLimitMemory: '2000Mi',
+        ports: [portMapping(name: 'cowbull', containerPort: 8080, hostPort: 8080)]
+     ),
     // containerTemplate(name: 'maven', image: 'k8s-master:32080/maven:3.6.1-jdk-11-slim', ttyEnabled: true, command: 'cat'),
     // containerTemplate(name: 'docker', image: 'k8s-master:32080/docker:19.03.1-dind', ttyEnabled: true, privileged: true),
     // containerTemplate(name: 'mono', image: 'k8s-master:32080/mono:6.0.0.313', ttyEnabled: true, privileged: true),
