@@ -7,7 +7,7 @@ from GameSPA.GameSPA import GameSPA
 from initialization_package.set_config import set_config
 from unittest import TestCase
 
-class Test_Methods(TestCase):
+class TestMethods(TestCase):
     def setUp(self):
         # Setup the environment to ensure any running cowbull
         # game server is ignored.
