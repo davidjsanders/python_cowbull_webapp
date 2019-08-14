@@ -23,7 +23,7 @@ def imageName = ''
 podTemplate(containers: [
     containerTemplate(name: 'redis', image: 'k8s-master:32080/redis:5.0.3-alpine', ttyEnabled: true, command: 'redis-server'),
     containerTemplate(name: 'python', image: 'k8s-master:32080/python:3.7.4', ttyEnabled: true, command: 'cat'),
-    containerTemplate(name: 'cowbull-server', image: 'dsanderscan/cowbull:19.08.38', ttyEnabled: true, command: 'cat'),
+    containerTemplate(name: 'cowbull-server', workingDir: '/cowbull', image: 'dsanderscan/cowbull:19.08.38', ttyEnabled: true),
     // containerTemplate(
     //     name: 'cowbull-server', 
     //     image: 'k8s-master:32080/dsanderscan/cowbull:19.08.38', 
@@ -64,7 +64,7 @@ podTemplate(containers: [
     stage('Run cowbull as a Docker container') {
         container('docker') {
             sh """
-                docker run -p 8080:8080 --rm --name cowbull -d dsanderscan/cowbull:19.08.38
+                docker run -p 18080:8080 --rm --name cowbull -d dsanderscan/cowbull:19.08.38
             """
         }
     }
@@ -141,17 +141,20 @@ podTemplate(containers: [
                 usernameVariable: 'USERNAME', 
                 passwordVariable: 'PASSWORD']
             ]) {
-                try {
-                    sh """
-                        docker login -u "${USERNAME}" -p "${PASSWORD}"
-                        echo "Building "${imageName}
-                        docker build -t ${imageName} -f vendor/docker/Dockerfile .
-                        docker push ${imageName}
-                        docker image rm ${imageName}
-                    """
-                } finally {
-                    echo "In the finally block"
-                }
+                sh """
+                    echo "Paused while testing."
+                """
+                // try {
+                //     sh """
+                //         docker login -u "${USERNAME}" -p "${PASSWORD}"
+                //         echo "Building "${imageName}
+                //         docker build -t ${imageName} -f vendor/docker/Dockerfile .
+                //         docker push ${imageName}
+                //         docker image rm ${imageName}
+                //     """
+                // } finally {
+                //     echo "In the finally block"
+                // }
             }
         }
     }
