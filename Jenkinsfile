@@ -56,14 +56,6 @@ spec:
       requests:
         memory: "100Mi"
         cpu: "0.2"
-  """
-,
-  yaml: """
-metadata:
-  labels:
-    app: jenkins-cowbull-webapp-images
-spec:
-  containers:
   - image: k8s-master:32080/dsanderscan/cowbull:19.08.40
     readinessProbe:
       tcpSocket:
