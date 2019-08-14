@@ -74,8 +74,8 @@ class Test_Methods(TestCase):
 
     def test_health_notready(self):
         response = self.app.get('/health', follow_redirects=True)
-        response_expected = "b'\"NotReady\"'"
-        self.assertEquals(response_expected, str(response.get_data()))
+        response_expected = "Game is unavailable"
+        self.assertTrue(response_expected in str(response.get_data()))
         
     # Expect the game to fail in unit test. Cowbull server should NOT be running
     # def test_no_game(self):
