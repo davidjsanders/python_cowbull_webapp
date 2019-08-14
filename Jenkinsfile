@@ -35,6 +35,11 @@ metadata:
 spec:
   containers:
   - image: k8s-master:32080/dsanderscan/cowbull:19.08.40
+    env:
+    - name: PERSISTER
+      value: '{"engine_name": "redis", "parameters": {"host": "localhost", "port": 6379, "db": 0, "password": ""}}'
+    - name: LOGGING_LEVEL
+      value: "30"
     readinessProbe:
       tcpSocket:
         port: 8080
@@ -56,23 +61,7 @@ spec:
       requests:
         memory: "100Mi"
         cpu: "0.2"
----
-metadata:
-  labels:
-    app: jenkins-cowbull-webapp-images
-spec:
-  containers:
-  - image: k8s-master:32080/python:3.7.4
-    command: ["cat"]
-    name: python-in-yaml
-    resources:
-      limits:
-        memory: "200Mi"
-        cpu: "1"
-      requests:
-        memory: "100Mi"
-        cpu: "0.2"
-  """
+"""
   ) {
   node(POD_LABEL) {
     stage('Setup environment') {
