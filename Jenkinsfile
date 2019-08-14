@@ -102,26 +102,23 @@ podTemplate(containers: [
                 sh """
                     pwd
                 """
-    //             sh """
-    //                 rm -rf *.pyc
-    //                 rm -f /var/jenkins_home/workspace/cowbull-server/.scannerwork/report-task.txt
-    //                 rm -f /var/jenkins_home/workspace/cowbull-server/.sonar/report-task.txt
-    //                 echo "Run sonar scanner"
-    //                 chmod +x ${scannerHome}/bin/sonar-scanner
-    //                 ${scannerHome}/bin/sonar-scanner -X -Dproject.settings=./sonar-project.properties -Dsonar.python.coverage.reportPath=./coverage.xml -Dsonar.projectVersion="${major}"."${minor}"."${env.BUILD_NUMBER}"
-    //             """
+                sh """
+                    rm -rf *.pyc
+                    rm -f /var/jenkins_home/workspace/cowbull-webapp/.scannerwork/report-task.txt
+                    rm -f /var/jenkins_home/workspace/cowbull-webapp/.sonar/report-task.txt
+                    echo "Run sonar scanner"
+                    chmod +x ${scannerHome}/bin/sonar-scanner
+                    ${scannerHome}/bin/sonar-scanner -X -Dproject.settings=./sonar-project.properties -Dsonar.python.coverage.reportPath=./coverage.xml -Dsonar.projectVersion="${major}"."${minor}"."${env.BUILD_NUMBER}"
+                """
             }
         }
     }
     stage('Quality Gate') {
         container('maven') {
             def scannerHome = tool 'SonarQube Scanner';
-            sh """
-                echo "TBD"
-            """
-//             timeout(time: 10, unit: 'MINUTES') {
-//                 waitForQualityGate abortPipeline: true
-//             }
+            timeout(time: 10, unit: 'MINUTES') {
+                waitForQualityGate abortPipeline: false
+            }
         }
     }
     stage('Docker Build') {
