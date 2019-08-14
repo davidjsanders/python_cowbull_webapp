@@ -73,22 +73,16 @@ spec:
                 python -m pip install -r requirements.txt
             """
         }
+        container('cowbull-svc') {
+            sh """
+                echo "Inside cowbull server"
+                ps -ef
+            """
+        }
     }
     stage('Verify Redis is running') {
         container('redis') {
             sh 'redis-cli ping'
-        }
-    }
-    stage('Run cowbull as a Docker container') {
-        container('docker') {
-            sh """
-                echo "Paused for testing with YAML for cowbull server"
-                # docker run \
-                #     -p 18080:8080 \
-                #     --rm \
-                #     --name cowbull \
-                #     -d ${cowbullServer}:${cowbullServerTag}
-            """
         }
     }
     stage('Execute Python unit tests') {
@@ -118,14 +112,6 @@ spec:
             } finally {
                 junit 'unittest-reports/*.xml'
             }
-        }
-    }
-    stage('Stop cowbull in Docker') {
-        container('docker') {
-            sh """
-                echo "Paused for testing"
-                # docker kill cowbull
-            """
         }
     }
     stage('Sonarqube code coverage') {
