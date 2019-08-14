@@ -26,6 +26,3 @@ class Test_App(TestCase):
         response = self.app.get('/', follow_redirects=True)
         response_expected = "Game is unavailable"
         self.assertTrue(response_expected in str(response.get_data()))
-
-    if __name__ == "__main__":
-        unittest.main()
