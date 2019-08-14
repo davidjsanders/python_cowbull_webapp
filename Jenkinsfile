@@ -130,28 +130,21 @@ podTemplate(containers: [
                 passwordVariable: 'PASSWORD']
             ]) {
                 sh """
-                    echo "Paused while testing."
+                    docker login -u "${USERNAME}" -p "${PASSWORD}"
+                    echo "Building "${imageName}
+                    docker build -t ${imageName} -f vendor/docker/Dockerfile .
+                    docker push ${imageName}
+                    docker image rm ${imageName}
                 """
-                // try {
-                //     sh """
-                //         docker login -u "${USERNAME}" -p "${PASSWORD}"
-                //         echo "Building "${imageName}
-                //         docker build -t ${imageName} -f vendor/docker/Dockerfile .
-                //         docker push ${imageName}
-                //         docker image rm ${imageName}
-                //     """
-                // } finally {
-                //     echo "In the finally block"
-                // }
             }
         }
     }
-//     stage('Tidy up') {
-//         container('mono') {
-//             sh """
-//                 echo "Doing some tidying up :) "
-//             """
-//         }
-//     }
+    stage('Tidy up') {
+        container('mono') {
+            sh """
+                echo "Doing some tidying up :) "
+            """
+        }
+    }
   }
 }
