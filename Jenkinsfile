@@ -82,11 +82,12 @@ spec:
     stage('Run cowbull as a Docker container') {
         container('docker') {
             sh """
-                docker run \
-                    -p 18080:8080 \
-                    --rm \
-                    --name cowbull \
-                    -d ${cowbullServer}:${cowbullServerTag}
+                echo "Paused for testing with YAML for cowbull server"
+                # docker run \
+                #     -p 18080:8080 \
+                #     --rm \
+                #     --name cowbull \
+                #     -d ${cowbullServer}:${cowbullServerTag}
             """
         }
     }
@@ -122,7 +123,8 @@ spec:
     stage('Stop cowbull in Docker') {
         container('docker') {
             sh """
-                docker kill cowbull
+                echo "Paused for testing"
+                # docker kill cowbull
             """
         }
     }
