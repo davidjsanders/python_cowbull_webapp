@@ -18,27 +18,13 @@
 
 def major = '19'
 def minor = '08'
+def cowbullServer = 'k8s-master:32080/dsanderscan/cowbull'
+def cowbullServerTag = '19.08.40'
 def imageName = ''
 
 podTemplate(containers: [
     containerTemplate(name: 'redis', image: 'k8s-master:32080/redis:5.0.3-alpine', ttyEnabled: true, command: 'redis-server'),
     containerTemplate(name: 'python', image: 'k8s-master:32080/python:3.7.4', ttyEnabled: true, command: 'cat'),
-    // containerTemplate(name: 'cowserver', workingDir: '/cowbull', image: 'dsanderscan/cowbull:19.08.38', ttyEnabled: true, command: 'cat'),
-    containerTemplate(name: 'cowserver', image: 'dsanderscan/cowbull:19.08.40', ttyEnabled: false, command: 'cat', ports: [portMapping(name: 'cowservr', containerPort: 8080, hostPort: 8080)]),
-    // containerTemplate(
-    //     name: 'cowserver', 
-    //     image: 'k8s-master:32080/dsanderscan/cowbull:19.08.40', 
-    //     workingDir: '/cowbull/',
-    //     command: 'cat',
-    //     ttyEnabled: false,
-    //     privileged: true,
-    //     alwaysPullImage: false,
-    //     resourceRequestCpu: '200m',
-    //     resourceLimitCpu: '500m',
-    //     resourceRequestMemory: '500Mi',
-    //     resourceLimitMemory: '2000Mi',
-    //     ports: [portMapping(name: 'cowbull', containerPort: 8080, hostPort: 8080)]
-    //  ),
     containerTemplate(name: 'maven', image: 'k8s-master:32080/maven:3.6.1-jdk-11-slim', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'docker', image: 'k8s-master:32080/docker:19.03.1-dind', ttyEnabled: true, privileged: true),
   ]) {
@@ -56,12 +42,6 @@ podTemplate(containers: [
                 python -m pip install -r requirements.txt
             """
         }
-        container('cowserver') {
-            sh """
-                pwd
-                ls -als
-            """
-        }
     }
     stage('Verify Redis is running') {
         container('redis') {
@@ -71,7 +51,11 @@ podTemplate(containers: [
     stage('Run cowbull as a Docker container') {
         container('docker') {
             sh """
-                docker run -p 18080:8080 --rm --name cowbull -d dsanderscan/cowbull:19.08.38
+                docker run \
+                    -p 8080:8080 \
+                    --rm \
+                    --name cowbull \
+                    -d ${cowbullServer}:${cowbullServerTag}
             """
         }
     }
