@@ -4,7 +4,7 @@ import os
 import unittest
 from unittest import TestCase
 
-class Test_GameSPA(TestCase):
+class Test_App(TestCase):
     def setUp(self):
         # Setup the environment to ensure any running cowbull
         # game server is ignored.
