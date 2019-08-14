@@ -55,6 +55,12 @@ podTemplate(containers: [
                 python -m pip install -r requirements.txt
             """
         }
+        container('cowbull-server') {
+            sh """
+                pwd
+                ls -als
+            """
+        }
     }
     stage('Verify Redis is running') {
         container('redis') {
