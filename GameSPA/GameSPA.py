@@ -134,10 +134,6 @@ class GameSPA(MethodView):
         error template; otherwise, get returns index.html.
         """
 
-        # Preparation
-        error_message = "An error (which hasn't been logged) has occurred. Sorry :( "
-        r = None
-
         #
         # Get the game modes for the server providing this game. If the call does
         # not set valid to True, then the modes_table variable will be set to a
