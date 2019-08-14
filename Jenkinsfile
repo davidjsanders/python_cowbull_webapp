@@ -23,9 +23,9 @@ def imageName = ''
 podTemplate(containers: [
     containerTemplate(name: 'redis', image: 'k8s-master:32080/redis:5.0.3-alpine', ttyEnabled: true, command: 'redis-server'),
     containerTemplate(name: 'python', image: 'k8s-master:32080/python:3.7.4', ttyEnabled: true, command: 'cat'),
-    containerTemplate(name: 'cowbull-server', workingDir: '/cowbull', image: 'dsanderscan/cowbull:19.08.38', ttyEnabled: true, command: 'cat'),
+    containerTemplate(name: 'cowserver', workingDir: '/cowbull', image: 'dsanderscan/cowbull:19.08.38', ttyEnabled: true, command: 'cat'),
     // containerTemplate(
-    //     name: 'cowbull-server', 
+    //     name: 'cowserver', 
     //     image: 'k8s-master:32080/dsanderscan/cowbull:19.08.38', 
     //     workingDir: '/cowbull/',
     //     command: 'cat',
@@ -55,7 +55,7 @@ podTemplate(containers: [
                 python -m pip install -r requirements.txt
             """
         }
-        container('cowbull-server') {
+        container('cowserver') {
             sh """
                 pwd
                 ls -als
