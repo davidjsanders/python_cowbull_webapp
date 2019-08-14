@@ -34,7 +34,7 @@ metadata:
     app: jenkins-cowbull-webapp-images
 spec:
   containers:
-  - image: k8s-master:32080/dsanders/cowbull:19.08.40
+  - image: k8s-master:32080/dsanderscan/cowbull:19.08.40
     envFrom:
     readinessProbe:
       tcpSocket:
