@@ -4,8 +4,6 @@ function analyzeGuess(json_response) {
     var game = json_response.game;
     var analysis = outcome.analysis;
     var status = game.status;
-    var cows = outcome.cows;
-    var bulls = outcome.bulls;
 
     if (status == "won" || status == "lost") {
         play_status.innerHTML = outcome.status;
@@ -53,12 +51,12 @@ function makeGuess() {
     play_status.innerHTML = "Connecting to game server. Please wait...";
 
     /* Build digits */
-    list_of_guesses = [];
+    let list_of_guesses = [];
     for (var dig = 0; dig < g_digits; dig++) {
-        digit = document.getElementById('digit_'+dig);
+        let digit = document.getElementById('digit_'+dig);
         list_of_guesses.push(digit.value);
     }
-    params = {
+    let params = {
         key: g_key,
         digits: list_of_guesses
     }
