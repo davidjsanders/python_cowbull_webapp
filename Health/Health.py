@@ -19,7 +19,7 @@ class Health(MethodView):
         :return:
         """
 
-        default_message = "NotReady"
+        #default_message = "NotReady"
         # Get the URL for the game modes
         logging.debug("Getting cowbull_modes_url from config:")
         cowbull_url = app.config.get('cowbull_modes_url', None)
@@ -41,7 +41,7 @@ class Health(MethodView):
             error_message = "Game is unavailable. The server returned " \
                             "an error: {}.".format(str(re))
             return Response(
-                response=json.dumps(default_message),
+                response=json.dumps(error_message),
                 mimetype="application/json",
                 status=500
             )
@@ -50,7 +50,7 @@ class Health(MethodView):
             error_message = "Game is unavailable. The server returned " \
                             "an error: {}.".format(str(re))
             return Response(
-                response=json.dumps(default_message),
+                response=json.dumps(error_message),
                 mimetype="application/json",
                 status=500
             )
@@ -62,7 +62,7 @@ class Health(MethodView):
             logging.debug("Exception: r is None!")
             error_message = "The game is unavailable: this is unexpected."
             return Response(
-                response=json.dumps(default_message),
+                response=json.dumps(error_message),
                 mimetype="application/json",
                 status=500
             )
@@ -73,7 +73,7 @@ class Health(MethodView):
             logging.debug("The HTTP request returned: {}".format(str(r.status_code)))
             error_message = "Game is unavailable. Status code {}".format(r.status_code)
             return Response(
-                response=json.dumps(default_message),
+                response=json.dumps(error_message),
                 mimetype="application/json",
                 status=r.status_code
             )
