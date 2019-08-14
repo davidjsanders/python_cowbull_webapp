@@ -28,7 +28,6 @@ podTemplate(containers: [
     containerTemplate(name: 'maven', image: 'k8s-master:32080/maven:3.6.1-jdk-11-slim', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'docker', image: 'k8s-master:32080/docker:19.03.1-dind', ttyEnabled: true, privileged: true),
   ],
-  yamlFile: 'jenkinsfile-manifest.yaml',
   yaml: """
 metadata:
   labels:
