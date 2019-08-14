@@ -24,7 +24,7 @@ podTemplate(containers: [
     containerTemplate(name: 'redis', image: 'k8s-master:32080/redis:5.0.3-alpine', ttyEnabled: true, command: 'redis-server'),
     containerTemplate(name: 'python', image: 'k8s-master:32080/python:3.7.4', ttyEnabled: true, command: 'cat'),
     // containerTemplate(name: 'cowserver', workingDir: '/cowbull', image: 'dsanderscan/cowbull:19.08.38', ttyEnabled: true, command: 'cat'),
-    containerTemplate(name: 'cowserver', workingDir: '/cowbull', image: 'dsanderscan/cowbull_webapp:19.08.52', ttyEnabled: true, command: 'cat'),
+    containerTemplate(name: 'cowserver', image: 'dsanderscan/cowbull_webapp:19.08.52', ttyEnabled: true, command: 'cat'),
     // containerTemplate(
     //     name: 'cowserver', 
     //     image: 'k8s-master:32080/dsanderscan/cowbull:19.08.38', 
