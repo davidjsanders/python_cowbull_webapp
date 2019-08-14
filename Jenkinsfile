@@ -76,9 +76,8 @@ podTemplate(containers: [
                     export PYTHONPATH="\$(pwd)"
                     export COWBULL_SERVER=localhost
                     export COWBULL_PORT=8080
-                    python -m unittests tests/
-                    // coverage run unittests/main.py
-                    // coverage xml -i
+                    coverage run tests/main.py
+                    coverage xml -i
                 """
             } finally {
                 junit 'unittest-reports/*.xml'
