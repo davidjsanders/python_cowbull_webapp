@@ -34,9 +34,6 @@ metadata:
     app: jenkins-cowbull-webapp-images
 spec:
   containers:
-  - image: k8s-master:32000/alpine:3.10
-    command: cat
-    name: test-alpine
   - image: k8s-master:32080/dsanderscan/cowbull:19.08.40
     env:
     - name: PERSISTER
