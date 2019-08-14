@@ -1,6 +1,8 @@
 #
 # D Sanders
 #
+unittest-reports/
+systest-reports/
 .idea/
 lib/
 **/*.old
