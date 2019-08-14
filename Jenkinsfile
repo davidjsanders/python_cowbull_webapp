@@ -88,8 +88,6 @@ spec:
             try {
                 sh """
                     export PYTHONPATH="\$(pwd)"
-                    export COWBULL_SERVER=localhost
-                    export COWBULL_PORT=8080
                     coverage run tests/main.py
                     coverage xml -i
                 """
@@ -102,10 +100,11 @@ spec:
         container('python') {
             try {
                 sh """
-                    export PYTHONPATH="\$(pwd)"
-                    export COWBULL_SERVER=localhost
-                    export COWBULL_PORT=8080
-                    python tests/main.py
+                    echo "TBD"
+                    #export PYTHONPATH="\$(pwd)"
+                    #export COWBULL_SERVER=localhost
+                    #export COWBULL_PORT=8080
+                    #python tests/main.py
                 """
             } finally {
                 junit 'unittest-reports/*.xml'

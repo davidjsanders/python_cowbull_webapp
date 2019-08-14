@@ -1,6 +1,6 @@
-import unittest
 import logging
-from test_init import TestFundamentals
+import unittest
+from test_GameSPA import Test_GameSPA
 
 if __name__ == '__main__':
     import xmlrunner
