@@ -18,7 +18,7 @@
 
 def major = '19'
 def minor = '08'
-def cowbullServer = 'k8s-master:32080/dsanderscan/cowbull'
+def cowbullServer = 'dsanderscan/cowbull' // Must use Docker Hub direct
 def cowbullServerTag = '19.08.40'
 def imageName = ''
 
