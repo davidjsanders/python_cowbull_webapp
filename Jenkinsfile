@@ -27,9 +27,45 @@ podTemplate(containers: [
     containerTemplate(name: 'python', image: 'k8s-master:32080/python:3.7.4', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'maven', image: 'k8s-master:32080/maven:3.6.1-jdk-11-slim', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'docker', image: 'k8s-master:32080/docker:19.03.1-dind', ttyEnabled: true, privileged: true),
-    containerTemplate(name: 'cowbull-svc', image: 'k8s-master:32080/dsanderscan/cowbull:19.08.40', ttyEnabled: true, privileged: true),
-  ]
-) {
+  ],
+  yaml: """
+metadata:
+  labels:
+    app: jenkins-cowbull-webapp-images
+spec:
+  containers:
+  - image: k8s-master:32000/alpine:3.10
+    command: cat
+    name: test-alpine
+  - image: k8s-master:32080/dsanderscan/cowbull:19.08.40
+    env:
+    - name: PERSISTER
+      value: '{"engine_name": "redis", "parameters": {"host": "localhost", "port": 6379, "db": 0, "password": ""}}'
+    - name: LOGGING_LEVEL
+      value: "30"
+    readinessProbe:
+      tcpSocket:
+        port: 8080
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    livenessProbe:
+      exec:
+        command:
+        - /bin/sh
+        - -c
+        - /cowbull/healthcheck/liveness.sh
+      initialDelaySeconds: 15
+      periodSeconds: 15
+    name: cowbull-svc
+    resources:
+      limits:
+        memory: "200Mi"
+        cpu: "1"
+      requests:
+        memory: "100Mi"
+        cpu: "0.2"
+"""
+  ) {
   node(POD_LABEL) {
     stage('Setup environment') {
         if ( (env.BRANCH_NAME).equals('master') ) {
