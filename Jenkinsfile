@@ -107,7 +107,8 @@ spec:
                     #python tests/main.py
                 """
             } finally {
-                junit 'unittest-reports/*.xml'
+                echo "TBD"
+                // junit 'unittest-reports/*.xml'
             }
         }
     }
