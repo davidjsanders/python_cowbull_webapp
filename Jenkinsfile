@@ -35,7 +35,6 @@ metadata:
 spec:
   containers:
   - image: k8s-master:32080/dsanderscan/cowbull:19.08.40
-    envFrom:
     readinessProbe:
       tcpSocket:
         port: 8080
@@ -71,12 +70,6 @@ spec:
             sh """
                 python --version
                 python -m pip install -r requirements.txt
-            """
-        }
-        container('cowbull-svc') {
-            sh """
-                echo "Inside cowbull server"
-                ps -ef
             """
         }
     }
