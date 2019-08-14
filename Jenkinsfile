@@ -140,7 +140,7 @@ podTemplate(containers: [
         }
     }
     stage('Tidy up') {
-        container('mono') {
+        container('python') {
             sh """
                 echo "Doing some tidying up :) "
             """
