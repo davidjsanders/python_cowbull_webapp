@@ -26,7 +26,7 @@ class TestMethods(TestCase):
 
     def test_set_config(self):
         # Note: PASS the real app not the test app
-        get = set_config(self.app.application)
+        set_config(self.app.application)
 
     def test_set_config_custom_config(self):
         # Note: PASS the real app not the test app
@@ -39,7 +39,7 @@ class TestMethods(TestCase):
         os.environ['BUILD_NUMBER'] = "1.2.3.4"
         os.environ['FLASK_PORT'] = "80"
         os.environ['FLASK_HOST'] = "4.3.2.1"
-        get = set_config(self.app.application)
+        set_config(self.app.application)
         self.assertEqual(self.app.application.config['cowbull_protocol'], "https")
         self.assertEqual(self.app.application.config['cowbull_server'], "foobar")
         self.assertEqual(self.app.application.config['cowbull_port'], "8")
@@ -65,12 +65,12 @@ class TestMethods(TestCase):
     def test_set_config_bad_port(self):
         # Note: PASS the real app not the test app
         os.environ['FLASK_PORT'] = "BADINT"
-        get = set_config(self.app.application)
+        set_config(self.app.application)
         self.assertEqual(self.app.application.config['FLASK_PORT'], 8001)
 
     def test_set_config_value_error(self):
         with self.assertRaises(ValueError):
-            get = set_config()
+            set_config()
 
     def test_health_notready(self):
         response = self.app.get('/health', follow_redirects=True)
