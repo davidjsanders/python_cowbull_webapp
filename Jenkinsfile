@@ -64,11 +64,6 @@ spec:
 """
   ) {
   node(POD_LABEL) {
-    docker.image('alpine:3.10').inside {
-        stage('Test') {
-            sh 'pwd'
-        }
-    }
     stage('Setup environment') {
         if ( (env.BRANCH_NAME).equals('master') ) {
             imageName = "dsanderscan/cowbull_webapp:${major}.${minor}.${env.BUILD_NUMBER}"
@@ -143,6 +138,12 @@ spec:
             }
         }
     }
+    // docker.image('alpine:3.10').inside {
+    //     stage('Test') {
+    //         sh 'pwd'
+    //     }
+    // }
+
     stage('Docker Build') {
         container('docker') {
             withCredentials([
@@ -151,6 +152,7 @@ spec:
                 usernameVariable: 'USERNAME', 
                 passwordVariable: 'PASSWORD']
             ]) {
+                docker.build("${imageName}")
                 sh """
                     docker login -u "${USERNAME}" -p "${PASSWORD}"
                     echo "Building "${imageName}
