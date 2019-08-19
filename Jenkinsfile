@@ -159,13 +159,13 @@ spec:
                         customImage.push()
                     }
                 }
-                sh """
-                    docker login -u "${USERNAME}" -p "${PASSWORD}"
-                    #echo "Building "${imageName}
-                    #docker build -t ${imageName} -f vendor/docker/Dockerfile .
-                    #docker push ${imageName}
-                    #docker image rm ${imageName}
-                """
+                // sh """
+                //     docker login -u "${USERNAME}" -p "${PASSWORD}"
+                //     #echo "Building "${imageName}
+                //     #docker build -t ${imageName} -f vendor/docker/Dockerfile .
+                //     #docker push ${imageName}
+                //     #docker image rm ${imageName}
+                // """
             }
         }
     }
