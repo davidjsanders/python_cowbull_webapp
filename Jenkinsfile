@@ -152,8 +152,12 @@ spec:
                 usernameVariable: 'USERNAME', 
                 passwordVariable: 'PASSWORD']
             ]) {
-                def customImage = docker.build("${imageName}", "-f vendor/docker/Dockerfile .")
-                customImage.push()
+                docker.withServer('tcp://10.70.1.6:2375') {
+                    docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
+                        def customImage = docker.build("${imageName}", "-f vendor/docker/Dockerfile .")
+                        customImage.push()
+                    }
+                }
                 sh """
                     docker login -u "${USERNAME}" -p "${PASSWORD}"
                     #echo "Building "${imageName}
