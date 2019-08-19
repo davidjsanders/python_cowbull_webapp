@@ -152,7 +152,8 @@ spec:
                 usernameVariable: 'USERNAME', 
                 passwordVariable: 'PASSWORD']
             ]) {
-                docker.withServer('tcp://${JENKINS_URL}:2375') {
+                def dockerServer = "tcp://${JENKINS_URL}:2375"
+                docker.withServer("$dockerServer") {
                     docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
                         def customImage = docker.build("${imageName}", "-f vendor/docker/Dockerfile .")
                         customImage.push()
