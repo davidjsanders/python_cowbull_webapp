@@ -8,7 +8,7 @@ RUN		apt-get update && \
 		chown cowbull /cowbull
 WORKDIR	/cowbull
 COPY	requirements.txt /cowbull/
-RUN		pip install -q -r /cowbull/requirements.txt
+RUN		pip install -r /cowbull/requirements.txt
 USER	cowbull
 ENV		PYTHONPATH="/cowbull:/cowbull/tests"
 COPY	GameSPA /cowbull/GameSPA/
