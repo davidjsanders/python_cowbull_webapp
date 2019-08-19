@@ -164,7 +164,7 @@ spec:
                     #echo "Building "${imageName}
                     #docker build -t ${imageName} -f vendor/docker/Dockerfile .
                     #docker push ${imageName}
-                    docker image rm ${imageName}
+                    #docker image rm ${imageName}
                 """
             }
         }
