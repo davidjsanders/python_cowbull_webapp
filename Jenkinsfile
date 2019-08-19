@@ -64,6 +64,11 @@ spec:
 """
   ) {
   node(POD_LABEL) {
+    docker.image('alpine:3.10').inside {
+        stage('Test') {
+            sh 'pwd'
+        }
+    }
     stage('Setup environment') {
         if ( (env.BRANCH_NAME).equals('master') ) {
             imageName = "dsanderscan/cowbull_webapp:${major}.${minor}.${env.BUILD_NUMBER}"
