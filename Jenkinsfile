@@ -152,7 +152,7 @@ spec:
                 usernameVariable: 'USERNAME', 
                 passwordVariable: 'PASSWORD']
             ]) {
-                docker.build("${imageName}", "-f vendor/docker/Dockerfile")
+                docker.build("${imageName}", "-f vendor/docker/Dockerfile .")
                 sh """
                     docker login -u "${USERNAME}" -p "${PASSWORD}"
                     echo "Building "${imageName}
