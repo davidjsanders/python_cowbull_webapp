@@ -152,7 +152,7 @@ spec:
                 usernameVariable: 'USERNAME', 
                 passwordVariable: 'PASSWORD']
             ]) {
-                def dockerServer = "tcp://10.109.199.141:2375"
+                def dockerServer = "tcp://jenkins-service.jenkins.cluster.local:2375"
                 docker.withServer("$dockerServer") {
                     docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
                         def customImage = docker.build("${imageName}", "-f vendor/docker/Dockerfile .")
