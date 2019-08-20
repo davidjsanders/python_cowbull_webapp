@@ -19,6 +19,10 @@
 // 19 Aug 2019  | David Sanders               | Combine k8s plug-in
 //              |                             | with Docker for simpler
 //              |                             | builds.
+//              |                             | Move Cowbull container
+//              |                             | yaml into a string.
+//              |                             | TODO: Change to
+//              |                             | readFile into string.
 // -------------------------------------------------------------------
 
 def major = '19'
