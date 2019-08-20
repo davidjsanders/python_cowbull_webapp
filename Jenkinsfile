@@ -161,7 +161,7 @@ spec:
             ]) {
                 docker.withServer("$dockerServer") {
                     // docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
-                    docker.withRegistry('https://k8s-master:32081', 'dockerhub') {
+                    docker.withRegistry('k8s-master:32081', 'nexus-oss') {
                         def customImage = docker.build("${imageName}", "-f vendor/docker/Dockerfile .")
                         customImage.push()
                     }
