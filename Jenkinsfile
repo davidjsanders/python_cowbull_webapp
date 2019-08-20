@@ -21,6 +21,7 @@ def minor = '08'
 def cowbullServer = 'dsanderscan/cowbull' // Must use Docker Hub direct
 def cowbullServerTag = '19.08.40'
 def imageName = ''
+def localImageName = ''
 def dockerServer = "tcp://jenkins-service.jenkins.svc.cluster.local:2375"
 
 podTemplate(containers: [
@@ -67,9 +68,11 @@ spec:
   node(POD_LABEL) {
     stage('Setup environment') {
         if ( (env.BRANCH_NAME).equals('master') ) {
-            imageName = "cowbull_webapp:${major}.${minor}.${env.BUILD_NUMBER}"
+            localImageName = "cowbull_webapp:${major}.${minor}.${env.BUILD_NUMBER}"
+            imageName = "dsanderscan/cowbull_webapp:${major}.${minor}.${env.BUILD_NUMBER}"
         } else {
-            imageName = "cowbull_webapp:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
+            localImageName = "cowbull_webapp:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
+            imageName = "dsanderscan/cowbull_webapp:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
         }
         checkout scm
         container('python') {
@@ -153,20 +156,25 @@ spec:
             //     usernameVariable: 'USERNAME', 
             //     passwordVariable: 'PASSWORD']
             // ]) {
-            withCredentials([
-                [$class: 'UsernamePasswordMultiBinding', 
-                credentialsId: 'nexus-oss',
-                usernameVariable: 'USERNAME', 
-                passwordVariable: 'PASSWORD']
-            ]) {
-                docker.withServer("$dockerServer") {
-                    // docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
-                    docker.withRegistry('http://k8s-master:32081', 'nexus-oss') {
-                        def customImage = docker.build("${imageName}", "-f vendor/docker/Dockerfile .")
-                        customImage.push()
-                    }
+            // withCredentials([
+            //     [$class: 'UsernamePasswordMultiBinding', 
+            //     credentialsId: 'nexus-oss',
+            //     usernameVariable: 'USERNAME', 
+            //     passwordVariable: 'PASSWORD']
+            // ]) {
+            docker.withServer("$dockerServer") {
+                def customImage
+                // docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
+                docker.withRegistry('http://k8s-master:32081', 'nexus-oss') {
+                    customImage = docker.build("${imageName}", "-f vendor/docker/Dockerfile .")
+                    customImage.push()
+                }
+                docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
+                    // def customImage = docker.build("${imageName}", "-f vendor/docker/Dockerfile .")
+                    customImage.push()
                 }
             }
+            // }
         }
     }
     stage('Tidy up') {
