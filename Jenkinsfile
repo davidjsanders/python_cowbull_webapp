@@ -43,10 +43,6 @@ def yamlString = "" // Variable used to contain yaml manifests which are
 // TODO: Make into a global variable
 def dockerServer = "tcp://jenkins-service.jenkins.svc.cluster.local:2375"
 
-// DNS name for connecting to the Nexus OSS python PyPi proxy service
-// TODO: Make into a global variable
-def nexusServer = "nexus-frontend.default.svc.cluster.local"
-
 // Preparation stage. Checks out the source and loads the yaml manifests
 // used during the pipeline. see ./jenkins/build-containers.yaml
 node {
@@ -74,14 +70,7 @@ podTemplate(yaml: "${yamlString}") {
         }
         checkout scm
         container('python') {
-            // withCredentials([
-            //     [$class: 'UsernamePasswordMultiBinding', 
-            //     credentialsId: 'pypi-user',
-            //     usernameVariable: 'USERNAME', 
-            //     passwordVariable: 'PASSWORD']
-            // ]) {
             withCredentials([file(credentialsId: 'pip-conf-file', variable: 'pipconfig')]) {
-                // some block
                 sh """
                     cp $pipconfig /etc/pip.conf
                     python --version
