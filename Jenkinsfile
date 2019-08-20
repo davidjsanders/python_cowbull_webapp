@@ -40,14 +40,7 @@ node {
         yamlString = readFile "jenkins/build-containers.yaml"
     }
 }
-podTemplate(containers: [
-    containerTemplate(name: 'redis', image: 'k8s-master:32080/redis:5.0.3-alpine', ttyEnabled: true, command: 'redis-server'),
-    containerTemplate(name: 'python', image: 'k8s-master:32080/python:3.7.4', ttyEnabled: true, command: 'cat'),
-    containerTemplate(name: 'maven', image: 'k8s-master:32080/maven:3.6.1-jdk-11-slim', ttyEnabled: true, command: 'cat'),
-    containerTemplate(name: 'docker', image: 'k8s-master:32080/docker:19.03.1-dind', ttyEnabled: true, privileged: false, command: 'cat'),
-  ],
-  yaml: "${yamlString}"
-  ) {
+podTemplate(yaml: "${yamlString}") {
   node(POD_LABEL) {
     stage('Setup environment') {
         if ( (env.BRANCH_NAME).equals('master') ) {

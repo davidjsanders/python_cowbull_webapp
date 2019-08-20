@@ -15,6 +15,54 @@ spec:
         memory: "100Mi"
         cpu: "0.2"
     tty: true
+  - image: k8s-master:32080/redis:5.0.3-alpine
+    command:
+    - cat
+    name: redis
+    resources:
+      limits:
+        memory: "500Mi"
+        cpu: "1"
+      requests:
+        memory: "250Mi"
+        cpu: "0.2"
+    tty: true
+  - image: k8s-master:32080/k8s-master:32080/python:3.7.4
+    command:
+    - cat
+    name: python
+    resources:
+      limits:
+        memory: "500Mi"
+        cpu: "1"
+      requests:
+        memory: "250Mi"
+        cpu: "0.2"
+    tty: true
+  - image: k8s-master:32080/maven:3.6.1-jdk-11-slim
+    command:
+    - cat
+    name: maven
+    resources:
+      limits:
+        memory: "1000Mi"
+        cpu: "2"
+      requests:
+        memory: "500Mi"
+        cpu: "0.5"
+    tty: true
+  - image: k8s-master:32080/docker:19.03.1-dind
+    command:
+    - cat
+    name: docker
+    resources:
+      limits:
+        memory: "2000Mi"
+        cpu: "2"
+      requests:
+        memory: "1000Mi"
+        cpu: "1"
+    tty: true
   - image: k8s-master:32081/cowbull:19.08.44
     env:
     - name: PERSISTER
