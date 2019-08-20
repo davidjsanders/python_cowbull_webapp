@@ -74,19 +74,16 @@ podTemplate(yaml: "${yamlString}") {
         }
         checkout scm
         container('python') {
-            withCredentials([
-                [$class: 'UsernamePasswordMultiBinding', 
-                credentialsId: 'pypi-user',
-                usernameVariable: 'USERNAME', 
-                passwordVariable: 'PASSWORD']
-            ]) {
+            // withCredentials([
+            //     [$class: 'UsernamePasswordMultiBinding', 
+            //     credentialsId: 'pypi-user',
+            //     usernameVariable: 'USERNAME', 
+            //     passwordVariable: 'PASSWORD']
+            // ]) {
+            withCredentials([file(credentialsId: 'pip-conf-file', variable: 'pipconfig')]) {
+                // some block
                 sh """
-                    cat <<-EOF >/etc/pip.conf
-[global]
-trusted-host = nexus-frontend.default.svc.cluster.local
-index = http://${USERNAME}:${PASSWORD}@${nexusServer}/repository/pypi-proxy/pypi
-index-url = http://${USERNAME}:${PASSWORD}@${nexusServer}/repository/pypi-proxy/simple
-EOF
+                    echo ${pipconfig} > /etc/pip.conf
                     python --version
                     python -m pip install -r requirements.txt
                 """
