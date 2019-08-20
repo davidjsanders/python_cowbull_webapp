@@ -21,6 +21,7 @@ def minor = '08'
 def cowbullServer = 'dsanderscan/cowbull' // Must use Docker Hub direct
 def cowbullServerTag = '19.08.40'
 def imageName = ''
+def dockerServer = "tcp://jenkins-service.jenkins.svc.cluster.local:2375"
 
 podTemplate(containers: [
     containerTemplate(name: 'redis', image: 'k8s-master:32080/redis:5.0.3-alpine', ttyEnabled: true, command: 'redis-server'),
@@ -146,26 +147,25 @@ spec:
 
     stage('Docker Build') {
         container('docker') {
+            // withCredentials([
+            //     [$class: 'UsernamePasswordMultiBinding', 
+            //     credentialsId: 'dockerhub',
+            //     usernameVariable: 'USERNAME', 
+            //     passwordVariable: 'PASSWORD']
+            // ]) {
             withCredentials([
                 [$class: 'UsernamePasswordMultiBinding', 
-                credentialsId: 'dockerhub',
+                credentialsId: 'dockernexus',
                 usernameVariable: 'USERNAME', 
                 passwordVariable: 'PASSWORD']
             ]) {
-                def dockerServer = "tcp://jenkins-service.jenkins.svc.cluster.local:2375"
                 docker.withServer("$dockerServer") {
-                    docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
+                    // docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
+                    docker.withRegistry('https://k8s-master:32081', 'dockerhub') {
                         def customImage = docker.build("${imageName}", "-f vendor/docker/Dockerfile .")
                         customImage.push()
                     }
                 }
-                // sh """
-                //     docker login -u "${USERNAME}" -p "${PASSWORD}"
-                //     #echo "Building "${imageName}
-                //     #docker build -t ${imageName} -f vendor/docker/Dockerfile .
-                //     #docker push ${imageName}
-                //     #docker image rm ${imageName}
-                // """
             }
         }
     }
