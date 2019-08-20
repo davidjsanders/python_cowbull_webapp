@@ -66,6 +66,12 @@ spec:
         memory: "100Mi"
         cpu: "0.2"
 """
+node {
+    stage('Prepare Environment') {
+        checkout scm
+        yamlString = readFile "jenkins/build-containers.yaml"
+    }
+}
 podTemplate(containers: [
     containerTemplate(name: 'redis', image: 'k8s-master:32080/redis:5.0.3-alpine', ttyEnabled: true, command: 'redis-server'),
     containerTemplate(name: 'python', image: 'k8s-master:32080/python:3.7.4', ttyEnabled: true, command: 'cat'),
