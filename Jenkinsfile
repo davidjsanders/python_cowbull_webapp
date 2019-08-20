@@ -35,7 +35,7 @@ podTemplate(containers: [
     containerTemplate(name: 'maven', image: 'k8s-master:32080/maven:3.6.1-jdk-11-slim', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'docker', image: 'k8s-master:32080/docker:19.03.1-dind', ttyEnabled: true, privileged: false, command: 'cat'),
   ],
-  yaml: readFile "jenkins/build-containers.yaml
+  yaml: readFile "jenkins/build-containers.yaml"
   ) {
   node(POD_LABEL) {
     stage('Setup environment') {
