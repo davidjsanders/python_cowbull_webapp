@@ -28,47 +28,14 @@ def cowbullServerTag = '19.08.44'
 def imageName = ''
 def localImageName = ''
 def dockerServer = "tcp://jenkins-service.jenkins.svc.cluster.local:2375"
-def yamlString = """
-metadata:
-  labels:
-    app: jenkins-cowbull-webapp-images
-spec:
-  containers:
-  - image: k8s-master:32081/cowbull:19.08.44
-    env:
-    - name: PERSISTER
-      value: '{"engine_name": "redis", "parameters": {"host": "localhost", "port": 6379, "db": 0, "password": ""}}'
-    - name: LOGGING_LEVEL
-      value: "30"
-    readinessProbe:
-      tcpSocket:
-        port: 8080
-      initialDelaySeconds: 5
-      periodSeconds: 10
-    livenessProbe:
-      exec:
-        command:
-        - /bin/sh
-        - -c
-        - /cowbull/healthcheck/liveness.sh
-      initialDelaySeconds: 15
-      periodSeconds: 15
-    name: cowbull-svc
-    resources:
-      limits:
-        memory: "200Mi"
-        cpu: "1"
-      requests:
-        memory: "100Mi"
-        cpu: "0.2"
-"""
+
 podTemplate(containers: [
     containerTemplate(name: 'redis', image: 'k8s-master:32080/redis:5.0.3-alpine', ttyEnabled: true, command: 'redis-server'),
     containerTemplate(name: 'python', image: 'k8s-master:32080/python:3.7.4', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'maven', image: 'k8s-master:32080/maven:3.6.1-jdk-11-slim', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'docker', image: 'k8s-master:32080/docker:19.03.1-dind', ttyEnabled: true, privileged: false, command: 'cat'),
   ],
-  yaml: "${yamlString}"
+  yaml: readFile "jenkins/build-containers.yaml
   ) {
   node(POD_LABEL) {
     stage('Setup environment') {
