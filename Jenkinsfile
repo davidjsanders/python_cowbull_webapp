@@ -43,6 +43,10 @@ def yamlString = "" // Variable used to contain yaml manifests which are
 // TODO: Make into a global variable
 def dockerServer = "tcp://jenkins-service.jenkins.svc.cluster.local:2375"
 
+// DNS name for connecting to the Nexus OSS python PyPi proxy service
+// TODO: Make into a global variable
+def nexusServer = "nexus-frontend.default.svc.cluster.local"
+
 // Preparation stage. Checks out the source and loads the yaml manifests
 // used during the pipeline. see ./jenkins/build-containers.yaml
 node {
@@ -80,8 +84,8 @@ podTemplate(yaml: "${yamlString}") {
                     cat <<-EOF >/etc/pip.conf
 [global]
 trusted-host = nexus-frontend.default.svc.cluster.local
-index = http://${USERNAME}:${PASSWORD}@nexus-frontend.default.svc.cluster.local/repository/pypi-proxy/pypi
-index-url = http://${USERNAME}:${PASSWORD}@nexus-frontend.default.svc.cluster.local/repository/pypi-proxy/simple
+index = http://${USERNAME}:${PASSWORD}@${nexusServer}/repository/pypi-proxy/pypi
+index-url = http://${USERNAME}:${PASSWORD}@${nexusServer}/repository/pypi-proxy/simple
 EOF
                     python --version
                     python -m pip install -r requirements.txt
