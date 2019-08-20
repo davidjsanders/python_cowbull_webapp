@@ -67,9 +67,9 @@ spec:
   node(POD_LABEL) {
     stage('Setup environment') {
         if ( (env.BRANCH_NAME).equals('master') ) {
-            imageName = "dsanderscan/cowbull_webapp:${major}.${minor}.${env.BUILD_NUMBER}"
+            imageName = "cowbull_webapp:${major}.${minor}.${env.BUILD_NUMBER}"
         } else {
-            imageName = "dsanderscan/cowbull_webapp:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
+            imageName = "cowbull_webapp:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
         }
         checkout scm
         container('python') {
@@ -161,7 +161,7 @@ spec:
             ]) {
                 docker.withServer("$dockerServer") {
                     // docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
-                    docker.withRegistry('k8s-master:32081', 'nexus-oss') {
+                    docker.withRegistry('http://k8s-master:32081', 'nexus-oss') {
                         def customImage = docker.build("${imageName}", "-f vendor/docker/Dockerfile .")
                         customImage.push()
                     }
