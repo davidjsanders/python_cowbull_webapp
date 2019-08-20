@@ -24,7 +24,7 @@
 def major = '19'
 def minor = '08'
 def cowbullServer = 'dsanderscan/cowbull' // Must use Docker Hub direct
-def cowbullServerTag = '19.08.40'
+def cowbullServerTag = '19.08.44'
 def imageName = ''
 def localImageName = ''
 def dockerServer = "tcp://jenkins-service.jenkins.svc.cluster.local:2375"
@@ -41,7 +41,7 @@ metadata:
     app: jenkins-cowbull-webapp-images
 spec:
   containers:
-  - image: k8s-master:32080/dsanderscan/cowbull:19.08.40
+  - image: k8s-master:32081/cowbull:19.08.44
     env:
     - name: PERSISTER
       value: '{"engine_name": "redis", "parameters": {"host": "localhost", "port": 6379, "db": 0, "password": ""}}'
