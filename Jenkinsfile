@@ -72,7 +72,7 @@ podTemplate(yaml: "${yamlString}") {
         container('python') {
             withCredentials([
                 [$class: 'UsernamePasswordMultiBinding', 
-                credentialsId: 'pipuser',
+                credentialsId: 'pypi-user',
                 usernameVariable: 'USERNAME', 
                 passwordVariable: 'PASSWORD']
             ]) {
