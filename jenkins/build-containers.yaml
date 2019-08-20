@@ -3,18 +3,6 @@ metadata:
     app: jenkins-cowbull-webapp-images
 spec:
   containers:
-  - image: k8s-master:32080/alpine:3.10
-    command:
-    - cat
-    name: temp-con
-    resources:
-      limits:
-        memory: "200Mi"
-        cpu: "1"
-      requests:
-        memory: "100Mi"
-        cpu: "0.2"
-    tty: true
   - image: k8s-master:32080/redis:5.0.3-alpine
     command:
     - cat
@@ -49,7 +37,7 @@ spec:
         cpu: "2"
       requests:
         memory: "500Mi"
-        cpu: "0.5"
+        cpu: "0.2"
     tty: true
   - image: k8s-master:32080/docker:19.03.1-dind
     command:
@@ -61,7 +49,7 @@ spec:
         cpu: "2"
       requests:
         memory: "1000Mi"
-        cpu: "1"
+        cpu: ".5"
     tty: true
   - image: k8s-master:32081/cowbull:19.08.44
     env:
