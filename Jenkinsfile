@@ -28,7 +28,7 @@ def cowbullServerTag = '19.08.44'
 def imageName = ''
 def localImageName = ''
 def dockerServer = "tcp://jenkins-service.jenkins.svc.cluster.local:2375"
-def yamlString = readFile "jenkins/build-containers.yaml"
+def yamlString = readFile "${env.WORKSPACE}/jenkins/build-containers.yaml"
 
 podTemplate(containers: [
     containerTemplate(name: 'redis', image: 'k8s-master:32080/redis:5.0.3-alpine', ttyEnabled: true, command: 'redis-server'),
