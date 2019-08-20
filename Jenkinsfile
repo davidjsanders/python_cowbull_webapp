@@ -83,7 +83,9 @@ podTemplate(yaml: "${yamlString}") {
             withCredentials([file(credentialsId: 'pip-conf-file', variable: 'pipconfig')]) {
                 // some block
                 sh """
-                    echo ${pipconfig} > /etc/pip.conf
+                    cat <<-EOF >/etc/pip.conf
+${pipconfig}
+EOF
                     python --version
                     python -m pip install -r requirements.txt
                 """
