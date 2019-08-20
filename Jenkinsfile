@@ -70,10 +70,23 @@ podTemplate(yaml: "${yamlString}") {
         }
         checkout scm
         container('python') {
-            sh """
-                python --version
-                python -m pip install -r requirements.txt
-            """
+            withCredentials([
+                [$class: 'UsernamePasswordMultiBinding', 
+                credentialsId: 'pipuser',
+                usernameVariable: 'USERNAME', 
+                passwordVariable: 'PASSWORD']
+            ]) {
+                sh """
+                    cat <<-EOF >/etc/pip.conf
+[global]
+trusted-host = k8s-master
+index = http://${USERNAME}:${PASSWORD}@k8s-master:31000/repository/pypi-proxy/pypi
+index-url = http://${USERNAME}:${PASSWORD}@k8s-master:31000/repository/pypi-proxy/simple
+EOF
+                    python --version
+                    python -m pip install -r requirements.txt
+                """
+            }
         }
     }
 
