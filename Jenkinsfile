@@ -15,6 +15,11 @@
 // Modifed On   | Modified By                 | Release Notes
 // -------------------------------------------------------------------
 // 13 Aug 2019  | David Sanders               | First release.
+// -------------------------------------------------------------------
+// 19 Aug 2019  | David Sanders               | Combine k8s plug-in
+//              |                             | with Docker for simpler
+//              |                             | builds.
+// -------------------------------------------------------------------
 
 def major = '19'
 def minor = '08'
@@ -82,11 +87,13 @@ spec:
             """
         }
     }
+
     stage('Verify Redis is running') {
         container('redis') {
             sh 'redis-cli ping'
         }
     }
+
     stage('Execute Python unit tests') {
         container('python') {
             try {
@@ -100,6 +107,7 @@ spec:
             }
         }
     }
+
     stage('Execute Python system tests') {
         container('python') {
             try {
@@ -116,6 +124,7 @@ spec:
             }
         }
     }
+ 
     stage('Sonarqube code coverage') {
         container('maven') {
             def scannerHome = tool 'SonarQube Scanner';
@@ -134,6 +143,7 @@ spec:
             }
         }
     }
+
     stage('Quality Gate') {
         container('maven') {
             def scannerHome = tool 'SonarQube Scanner';
@@ -142,26 +152,9 @@ spec:
             }
         }
     }
-    // docker.image('alpine:3.10').inside {
-    //     stage('Test') {
-    //         sh 'pwd'
-    //     }
-    // }
 
     stage('Docker Build') {
         container('docker') {
-            // withCredentials([
-            //     [$class: 'UsernamePasswordMultiBinding', 
-            //     credentialsId: 'dockerhub',
-            //     usernameVariable: 'USERNAME', 
-            //     passwordVariable: 'PASSWORD']
-            // ]) {
-            // withCredentials([
-            //     [$class: 'UsernamePasswordMultiBinding', 
-            //     credentialsId: 'nexus-oss',
-            //     usernameVariable: 'USERNAME', 
-            //     passwordVariable: 'PASSWORD']
-            // ]) {
             docker.withServer("$dockerServer") {
                 // docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
                 docker.withRegistry('http://k8s-master:32081', 'nexus-oss') {
@@ -176,6 +169,7 @@ spec:
             // }
         }
     }
+
     stage('Tidy up') {
         container('python') {
             sh """
