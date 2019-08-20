@@ -32,40 +32,8 @@ def cowbullServerTag = '19.08.44'
 def imageName = ''
 def localImageName = ''
 def dockerServer = "tcp://jenkins-service.jenkins.svc.cluster.local:2375"
-def yamlString = """
-metadata:
-  labels:
-    app: jenkins-cowbull-webapp-images
-spec:
-  containers:
-  - image: k8s-master:32081/cowbull:19.08.44
-    env:
-    - name: PERSISTER
-      value: '{"engine_name": "redis", "parameters": {"host": "localhost", "port": 6379, "db": 0, "password": ""}}'
-    - name: LOGGING_LEVEL
-      value: "30"
-    readinessProbe:
-      tcpSocket:
-        port: 8080
-      initialDelaySeconds: 5
-      periodSeconds: 10
-    livenessProbe:
-      exec:
-        command:
-        - /bin/sh
-        - -c
-        - /cowbull/healthcheck/liveness.sh
-      initialDelaySeconds: 15
-      periodSeconds: 15
-    name: cowbull-svc
-    resources:
-      limits:
-        memory: "200Mi"
-        cpu: "1"
-      requests:
-        memory: "100Mi"
-        cpu: "0.2"
-"""
+def yamlString = ""
+
 node {
     stage('Prepare Environment') {
         checkout scm
