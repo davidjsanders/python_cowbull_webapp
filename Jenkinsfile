@@ -28,6 +28,7 @@ def cowbullServerTag = '19.08.44'
 def imageName = ''
 def localImageName = ''
 def dockerServer = "tcp://jenkins-service.jenkins.svc.cluster.local:2375"
+env.WORKSPACE = pwd()
 def yamlString = readFile "${env.WORKSPACE}/jenkins/build-containers.yaml"
 
 podTemplate(containers: [
