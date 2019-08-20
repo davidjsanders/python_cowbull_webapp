@@ -155,7 +155,7 @@ spec:
             // ]) {
             withCredentials([
                 [$class: 'UsernamePasswordMultiBinding', 
-                credentialsId: 'dockernexus',
+                credentialsId: 'nexus-oss',
                 usernameVariable: 'USERNAME', 
                 passwordVariable: 'PASSWORD']
             ]) {
