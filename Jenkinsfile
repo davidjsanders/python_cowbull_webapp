@@ -163,14 +163,13 @@ spec:
             //     passwordVariable: 'PASSWORD']
             // ]) {
             docker.withServer("$dockerServer") {
-                def customImage
                 // docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
                 docker.withRegistry('http://k8s-master:32081', 'nexus-oss') {
-                    customImage = docker.build("${imageName}", "-f vendor/docker/Dockerfile .")
+                    def customImage = docker.build("${localImageName}", "-f vendor/docker/Dockerfile .")
                     customImage.push()
                 }
                 docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
-                    // def customImage = docker.build("${imageName}", "-f vendor/docker/Dockerfile .")
+                    def customImage = docker.build("${imageName}", "-f vendor/docker/Dockerfile .")
                     customImage.push()
                 }
             }
