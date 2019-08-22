@@ -30,6 +30,10 @@
 //              |                             | on pipeline execution.
 //              |                             | Add comments.
 // -------------------------------------------------------------------
+// 21 Aug 2019  | David Sanders               | Change build containers
+//              |                             | to -local for minikube
+//              |                             | based k8s
+// -------------------------------------------------------------------
 
 // Define the variables used in the pipeline
 def major = '19'    // The major version of the build - Major.Minor.Build
@@ -38,6 +42,11 @@ def imageName = ''  // Variable to hold image name; depends on branch
 def privateImage = '' // Variable for private hub image name
 def yamlString = "" // Variable used to contain yaml manifests which are
                     // loaded from file.
+
+// The manifestsFile to use - can vary depending on 'proper' cluster
+// vs. minikube
+//def manifestsFie = "jenkins/build-containers.yaml"
+def manifestsFile = "jenkins/build-containers-local.yaml"
 
 // DNS name and protocol for connecting to the Docker service
 // TODO: Make into a global variable
@@ -48,7 +57,7 @@ def dockerServer = "tcp://jenkins-service.jenkins.svc.cluster.local:2375"
 node {
     stage('Prepare Environment') {
         checkout scm
-        yamlString = readFile "jenkins/build-containers.yaml"
+        yamlString = readFile "${manifestsFile}"
     }
 }
 
@@ -167,10 +176,10 @@ podTemplate(yaml: "${yamlString}") {
         container('docker') {
             docker.withServer("$dockerServer") {
                 // docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
-                docker.withRegistry('http://k8s-master:32081', 'nexus-oss') {
-                    def customImage = docker.build("${privateImage}", "-f vendor/docker/Dockerfile .")
-                    customImage.push()
-                }
+                // docker.withRegistry('http://k8s-master:32081', 'nexus-oss') {
+                //     def customImage = docker.build("${privateImage}", "-f vendor/docker/Dockerfile .")
+                //     customImage.push()
+                // }
                 docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
                     def customImage = docker.build("${imageName}", "-f vendor/docker/Dockerfile .")
                     customImage.push()

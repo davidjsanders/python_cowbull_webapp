@@ -1,0 +1,50 @@
+metadata:
+  labels:
+    app: jenkins-cowbull-webapp-images
+spec:
+  containers:
+  - image: redis:5.0.3-alpine
+    name: redis
+    tty: true
+  - image: python:3.7.4
+    command:
+    - cat
+    name: python
+    tty: true
+  - image: maven:3.6.1-jdk-11-slim
+    command:
+    - cat
+    name: maven
+    tty: true
+  - image: docker:19.03.1-dind
+    command:
+    - cat
+    name: docker
+    tty: true
+  - image: dsanderscan/cowbull:19.08.44
+    env:
+    - name: PERSISTER
+      value: '{"engine_name": "redis", "parameters": {"host": "localhost", "port": 6379, "db": 0, "password": ""}}'
+    - name: LOGGING_LEVEL
+      value: "30"
+    readinessProbe:
+      tcpSocket:
+        port: 8080
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    livenessProbe:
+      exec:
+        command:
+        - /bin/sh
+        - -c
+        - /cowbull/healthcheck/liveness.sh
+      initialDelaySeconds: 15
+      periodSeconds: 15
+    name: cowbull-svc
+    resources:
+      limits:
+        memory: "200Mi"
+        cpu: "1"
+      requests:
+        memory: "100Mi"
+        cpu: "0.2"
