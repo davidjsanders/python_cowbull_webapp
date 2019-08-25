@@ -60,6 +60,12 @@ node {
         yamlString = readFile "${manifestsFile}"
     }
 }
+node {
+    agent { label 'windows' }
+    stage('Check Windows') {
+        bat 'dir'
+    }
+}
 
 // Define the pod templates to, run the containers and execute the
 // pipeline.
