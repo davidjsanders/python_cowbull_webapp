@@ -60,8 +60,7 @@ node {
         yamlString = readFile "${manifestsFile}"
     }
 }
-node {
-    agent { label 'windows' }
+node('windows') {
     stage('Check Windows') {
         bat 'dir'
     }
