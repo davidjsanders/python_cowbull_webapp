@@ -60,11 +60,13 @@ node {
         yamlString = readFile "${manifestsFile}"
     }
 }
-node('windows') {
-    stage('Check Windows') {
-        bat 'dir'
-    }
-}
+
+// Example of using a Windows node in the pipeline
+// node('windows') {
+//     stage('Check Windows') {
+//         bat 'dir'
+//     }
+// }
 
 // Define the pod templates to, run the containers and execute the
 // pipeline.
