@@ -34,6 +34,10 @@
 //              |                             | to -local for minikube
 //              |                             | based k8s
 // -------------------------------------------------------------------
+// 26 Aug 2019  | David Sanders               | Simple change to test
+//              |                             | trigger for Dynamic
+//              |                             | DNS based name.
+// -------------------------------------------------------------------
 
 // Define the variables used in the pipeline
 def major = '19'    // The major version of the build - Major.Minor.Build
