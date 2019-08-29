@@ -199,7 +199,7 @@ podTemplate(yaml: "${yamlString}") {
                 }
             }
             withEnv(["image=${scanImage}"]) {
-                sh 'echo "{image}" > anchore_images'
+                sh 'echo "$image" > anchore_images'
             }
         }
     }
