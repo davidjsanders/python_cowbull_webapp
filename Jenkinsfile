@@ -85,11 +85,12 @@ podTemplate(yaml: "${yamlString}") {
         if ( (env.BRANCH_NAME).equals('master') ) {
             privateImage = "cowbull_webapp:${major}.${minor}.${env.BUILD_NUMBER}"
             imageName = "dsanderscan/cowbull_webapp:${major}.${minor}.${env.BUILD_NUMBER}"
+            scanImage = "docker.io/dsanderscan/cowbull_webapp:${major}.${minor}.${env.BUILD_NUMBER}.prescan"
         } else {
             privateImage = "cowbull_webapp:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
             imageName = "dsanderscan/cowbull_webapp:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
+            scanImage = "docker.io/dsanderscan/cowbull_webapp:${env.BRANCH_NAME}.${env.BUILD_NUMBER}.prescan"
         }
-        scanImage = "docker.io/${imageName}.prescan"
         checkout scm
         container('python') {
             withCredentials([file(credentialsId: 'pip-conf-file', variable: 'pipconfig')]) {
@@ -197,8 +198,8 @@ podTemplate(yaml: "${yamlString}") {
                     customImage.push()
                 }
             }
-            withEnv(["imageName=${scanImage}"]) {
-                sh 'echo "{imageName}" > anchore_images'
+            withEnv(["image=${scanImage}"]) {
+                sh 'echo "{image}" > anchore_images'
             }
         }
     }
@@ -216,7 +217,7 @@ podTemplate(yaml: "${yamlString}") {
     }
 
     stage('Anchore scan') {
-        anchore bailOnFail: false, bailOnPluginFail: false, engineCredentialsId: 'azure-azadmin', name: 'anchore_images'
+        anchore bailOnFail: false, bailOnPluginFail: true, engineCredentialsId: 'azure-azadmin', name: 'anchore_images'
     }
 
     stage('Finalize') {
