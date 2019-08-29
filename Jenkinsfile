@@ -50,7 +50,7 @@ def yamlString = "" // Variable used to contain yaml manifests which are
 // The manifestsFile to use - can vary depending on 'proper' cluster
 // vs. minikube
 //def manifestsFie = "jenkins/build-containers.yaml"
-def manifestsFile = "jenkins/build-containers-local.yaml"
+def manifestsFile = "jenkins/build-containers.yaml"
 
 // DNS name and protocol for connecting to the Docker service
 // TODO: Make into a global variable
