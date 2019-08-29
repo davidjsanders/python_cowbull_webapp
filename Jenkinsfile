@@ -85,12 +85,11 @@ podTemplate(yaml: "${yamlString}") {
         if ( (env.BRANCH_NAME).equals('master') ) {
             privateImage = "cowbull_webapp:${major}.${minor}.${env.BUILD_NUMBER}"
             imageName = "dsanderscan/cowbull_webapp:${major}.${minor}.${env.BUILD_NUMBER}"
-            scanImage = "docker.io/${imageName}"
         } else {
             privateImage = "cowbull_webapp:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
             imageName = "dsanderscan/cowbull_webapp:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
-            scanImage = "docker.io/${imageName}"
         }
+        scanImage = "docker.io/${imageName}.prescan"
         checkout scm
         container('python') {
             withCredentials([file(credentialsId: 'pip-conf-file', variable: 'pipconfig')]) {
@@ -194,11 +193,11 @@ podTemplate(yaml: "${yamlString}") {
                     customImage.push()
                 }
                 docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
-                    def customImage = docker.build("${imageName}.prescan", "-f Dockerfile .")
+                    def customImage = docker.build("${scanImage}", "-f Dockerfile .")
                     customImage.push()
                 }
             }
-            withEnv(["imageName=${scanImage}.prescan"]) {
+            withEnv(["imageName=${scanImage}"]) {
                 sh 'echo "{imageName}" > anchore_images'
             }
         }
@@ -207,9 +206,9 @@ podTemplate(yaml: "${yamlString}") {
     stage('Test image') {
         container('docker') {
             docker.withServer("$dockerServer") {
-                withEnv(["imageName=${imageName}"]) {
+                withEnv(["image=${scanImage}"]) {
                     sh """
-                        docker run --rm $imageName.prescan /bin/sh -c "python3 tests/main.py"
+                        docker run --rm $image /bin/sh -c "python3 tests/main.py"
                     """
                 }
             }
