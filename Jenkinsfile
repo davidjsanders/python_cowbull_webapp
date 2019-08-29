@@ -193,9 +193,6 @@ podTemplate(yaml: "${yamlString}") {
                 docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
                     def customImage = docker.build("${imageName}", "-f Dockerfile .")
                     customImage.push()
-                    sh """
-                        docker run --rm dsanderscan/cowbull_webapp:move-2-alpine.6 /bin/sh -c "python3 tests/main.py"
-                    """
                 }
             }
             withEnv(["imageName=${imageName}"]) {
@@ -208,12 +205,10 @@ podTemplate(yaml: "${yamlString}") {
     stage('Test image') {
         /* Requires the Docker Pipeline plugin to be installed */
         container('docker') {
-            docker.withServer("$dockerServer") {
-                withEnv(["imageName=${imageName}"]) {
-                    sh """
-                        docker run --rm $imageName /bin/sh -c "python3 tests/main.py"
-                    """
-                }
+            withEnv(["imageName=${imageName}"]) {
+                sh """
+                    docker run --rm $imageName /bin/sh -c "python3 tests/main.py"
+                """
             }
         }
     }
