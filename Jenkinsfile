@@ -190,7 +190,7 @@ podTemplate(yaml: "${yamlString}") {
         container('docker') {
             docker.withServer("$dockerServer") {
                 docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
-                    def customImage = docker.build("${scanImage}", "-f Dockerfile .")
+                    def customImage = docker.build("${imageName}.prescan", "-f Dockerfile .")
                     customImage.push()
                 }
             }
@@ -207,7 +207,7 @@ podTemplate(yaml: "${yamlString}") {
     stage('Test image') {
         container('docker') {
             docker.withServer("$dockerServer") {
-                withEnv(["image=${scanImage}"]) {
+                withEnv(["image=${imageName}"]) {
                     sh """
                         docker run --rm $image /bin/sh -c "python3 tests/main.py"
                     """
