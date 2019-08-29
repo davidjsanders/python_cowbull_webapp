@@ -186,7 +186,6 @@ podTemplate(yaml: "${yamlString}") {
     stage('Docker Build') {
         container('docker') {
             docker.withServer("$dockerServer") {
-                // docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
                 // docker.withRegistry('http://k8s-master:32081', 'nexus-oss') {
                 //     def customImage = docker.build("${privateImage}", "-f vendor/docker/Dockerfile .")
                 //     customImage.push()
@@ -194,6 +193,9 @@ podTemplate(yaml: "${yamlString}") {
                 docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
                     def customImage = docker.build("${imageName}", "-f Dockerfile .")
                     customImage.push()
+                    customImage.inside() {
+                        sh 'pwd'
+                    }
                 }
             }
             withEnv(["imageName=${imageName}"]) {
