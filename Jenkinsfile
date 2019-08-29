@@ -208,9 +208,13 @@ podTemplate(yaml: "${yamlString}") {
     stage('Test image') {
         /* Requires the Docker Pipeline plugin to be installed */
         container('docker') {
-            sh """
-                docker run --rm dsanderscan/cowbull_webapp:move-2-alpine.6 /bin/sh -c "python3 tests/main.py"
-            """
+            docker.withServer("$dockerServer") {
+                withEnv(["imageName=${imageName}"]) {
+                    sh """
+                        docker run --rm $imageName /bin/sh -c "python3 tests/main.py"
+                    """
+                }
+            }
         }
     }
 
