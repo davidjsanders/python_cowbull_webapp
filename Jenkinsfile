@@ -194,7 +194,7 @@ podTemplate(yaml: "${yamlString}") {
                     def customImage = docker.build("${imageName}", "-f Dockerfile .")
                     customImage.push()
                     sh """
-                        docker run --rm -it dsanderscan/cowbull_webapp:move-2-alpine.6 /bin/sh -c "python3 tests/main.py"
+                        docker run --rm dsanderscan/cowbull_webapp:move-2-alpine.6 /bin/sh -c "python3 tests/main.py"
                     """
                 }
             }
