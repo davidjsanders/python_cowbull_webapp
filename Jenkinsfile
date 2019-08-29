@@ -207,9 +207,9 @@ podTemplate(yaml: "${yamlString}") {
     stage('Test image') {
         container('docker') {
             docker.withServer("$dockerServer") {
-                withEnv(["imageName=${imageName}.prescan"]) {
+                withEnv(["imageName=${imageName}"]) {
                     sh """
-                        docker run --rm $imageName /bin/sh -c "python3 tests/main.py"
+                        docker run --rm $imageName.prescan /bin/sh -c "python3 tests/main.py"
                     """
                 }
             }
