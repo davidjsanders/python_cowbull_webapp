@@ -208,7 +208,10 @@ podTemplate(yaml: "${yamlString}") {
         container('docker') {
             docker.withServer("$dockerServer") {
                 docker.image("${imageName}").inside() {
-                    sh 'python3 tests/main.py'
+                    sh """
+                        pwd
+                        python3 tests/main.py
+                    """"
                 }
             }
         }
