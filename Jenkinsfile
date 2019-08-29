@@ -44,13 +44,14 @@ def major = '19'    // The major version of the build - Major.Minor.Build
 def minor = '08'    // The minor version of the build - Major.Minor.Build
 def imageName = ''  // Variable to hold image name; depends on branch
 def privateImage = '' // Variable for private hub image name
+def scanImage = ''  // Variable to hold short image name
 def yamlString = "" // Variable used to contain yaml manifests which are
                     // loaded from file.
 
 // The manifestsFile to use - can vary depending on 'proper' cluster
 // vs. minikube
 //def manifestsFie = "jenkins/build-containers.yaml"
-def manifestsFile = "jenkins/build-containers-local.yaml"
+def manifestsFile = "jenkins/build-containers.yaml"
 
 // DNS name and protocol for connecting to the Docker service
 // TODO: Make into a global variable
@@ -59,7 +60,7 @@ def dockerServer = "tcp://jenkins-service.jenkins.svc.cluster.local:2375"
 // Preparation stage. Checks out the source and loads the yaml manifests
 // used during the pipeline. see ./jenkins/build-containers.yaml
 node {
-    stage('Prepare Environment') {
+    stage('Prepare') {
         checkout scm
         yamlString = readFile "${manifestsFile}"
     }
@@ -80,13 +81,15 @@ podTemplate(yaml: "${yamlString}") {
     // Setup environment stage. Set the image name depending on the
     // branch, use the python container and install the required pypi
     // packages from requirements.txt
-    stage('Setup environment') {
+    stage('Setup') {
         if ( (env.BRANCH_NAME).equals('master') ) {
             privateImage = "cowbull_webapp:${major}.${minor}.${env.BUILD_NUMBER}"
             imageName = "dsanderscan/cowbull_webapp:${major}.${minor}.${env.BUILD_NUMBER}"
+            scanImage = "docker.io/dsanderscan/cowbull_webapp:${major}.${minor}.${env.BUILD_NUMBER}.prescan"
         } else {
             privateImage = "cowbull_webapp:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
             imageName = "dsanderscan/cowbull_webapp:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
+            scanImage = "docker.io/dsanderscan/cowbull_webapp:${env.BRANCH_NAME}.${env.BUILD_NUMBER}.prescan"
         }
         checkout scm
         container('python') {
@@ -102,7 +105,7 @@ podTemplate(yaml: "${yamlString}") {
 
     // Simple stage to ensure that redis is reachable; redis is required
     // for unit and system tests later in the pipeline.
-    stage('Verify Redis is running') {
+    stage('Verify Redis') {
         container('redis') {
             sh 'redis-cli ping'
         }
@@ -111,7 +114,7 @@ podTemplate(yaml: "${yamlString}") {
     // Execute the unit tests; while these should have already been
     // processed, they are re-run to ensure the source software is
     // good.
-    stage('Execute Python unit tests') {
+    stage('Unit test') {
         container('python') {
             try {
                 sh """
@@ -128,7 +131,7 @@ podTemplate(yaml: "${yamlString}") {
 
     // Execute the system tests; verify that the system as a whole is
     // operating as expected.
-    stage('Execute Python system tests') {
+    stage('System test') {
         container('python') {
             try {
                 sh """
@@ -143,7 +146,7 @@ podTemplate(yaml: "${yamlString}") {
  
     // Collect the coverage reports and pass them to the sonarqube
     // scanner for analysis.
-    stage('Sonarqube code coverage') {
+    stage('Code coverage') {
         container('maven') {
             def scannerHome = tool 'SonarQube Scanner';
             withSonarQubeEnv('Sonarqube') {
@@ -183,29 +186,52 @@ podTemplate(yaml: "${yamlString}") {
     // Build the application into a docker image and push it to the
     // Docker Hub and the private registry.
     // TODO: the registry URLs should be global variables.
-    stage('Docker Build') {
+    stage('Stage Build') {
         container('docker') {
             docker.withServer("$dockerServer") {
-                // docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
-                // docker.withRegistry('http://k8s-master:32081', 'nexus-oss') {
-                //     def customImage = docker.build("${privateImage}", "-f vendor/docker/Dockerfile .")
-                //     customImage.push()
-                // }
                 docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
-                    def customImage = docker.build("${imageName}", "-f vendor/docker/Dockerfile .")
+                    def customImage = docker.build("${imageName}.prescan", "-f Dockerfile .")
                     customImage.push()
                 }
             }
-            // }
+            withEnv(["image=${scanImage}"]) {
+                sh """
+                    echo "$image" > anchore_images
+                    echo "Slep for 10s - allow docker.io to process image"
+                    sleep 10
+                """
+            }
         }
     }
 
-    // Tidy up. Nothing happens here at present.
-    stage('Tidy up') {
-        container('python') {
-            sh """
-                echo "Doing some tidying up :) "
-            """
+    stage('Test image') {
+        container('docker') {
+            docker.withServer("$dockerServer") {
+                withEnv(["image=${imageName}.prescan"]) {
+                    sh """
+                        docker run --rm $image /bin/sh -c "python3 tests/main.py"
+                    """
+                }
+            }
+        }
+    }
+
+    stage('Anchore scan') {
+        anchore bailOnFail: false, bailOnPluginFail: true, engineCredentialsId: 'azure-azadmin', name: 'anchore_images'
+    }
+
+    stage('Finalize') {
+        container('docker') {
+            docker.withServer("$dockerServer") {
+                docker.withRegistry('http://k8s-master:32081', 'nexus-oss') {
+                    def customImage = docker.build("${privateImage}", "-f Dockerfile .")
+                    customImage.push()
+                }
+                docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
+                    def customImage = docker.build("${imageName}", "-f Dockerfile .")
+                    customImage.push()
+                }
+            }
         }
     }
   }
