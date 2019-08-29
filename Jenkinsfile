@@ -211,7 +211,7 @@ podTemplate(yaml: "${yamlString}") {
                     sh """
                         pwd
                         python3 tests/main.py
-                    """"
+                    """
                 }
             }
         }
