@@ -192,12 +192,26 @@ podTemplate(yaml: "${yamlString}") {
                 //     customImage.push()
                 // }
                 docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
-                    def customImage = docker.build("${imageName}", "-f vendor/docker/Dockerfile .")
+                    def customImage = docker.build("${imageName}", "-f Dockerfile .")
                     customImage.push()
                 }
             }
+            withEnv(["imageName=${imageName}"]) {
+                sh 'echo "docker.io/${imageName}" > anchore_images'
+            }
             // }
         }
+    }
+
+    stage('Verify image') {
+        /* Requires the Docker Pipeline plugin to be installed */
+        docker.image("${imageName}") {
+            sh 'python3 tests/main.py'
+        }
+    }
+
+    stage('Image Security scan') {
+        anchore bailOnFail: false, bailOnPluginFail: false, engineCredentialsId: 'azure-azadmin', name: 'anchore_images'
     }
 
     // Tidy up. Nothing happens here at present.
