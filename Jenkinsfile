@@ -193,9 +193,9 @@ podTemplate(yaml: "${yamlString}") {
                 docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
                     def customImage = docker.build("${imageName}", "-f Dockerfile .")
                     customImage.push()
-                    customImage.inside() {
-                        sh 'pwd'
-                    }
+                    sh """
+                        docker run --rm -it dsanderscan/cowbull_webapp:move-2-alpine.6 /bin/sh -c "python3 tests/main.py"
+                    """
                 }
             }
             withEnv(["imageName=${imageName}"]) {
