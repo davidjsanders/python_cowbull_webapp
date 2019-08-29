@@ -207,7 +207,7 @@ podTemplate(yaml: "${yamlString}") {
         /* Requires the Docker Pipeline plugin to be installed */
         container('docker') {
             docker.withServer("$dockerServer") {
-                docker.image("${imageName}").inside {
+                docker.image("${imageName}").withRun {
                     sh 'python3 tests/main.py'
                 }
             }
