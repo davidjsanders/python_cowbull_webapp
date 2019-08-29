@@ -189,17 +189,17 @@ podTemplate(yaml: "${yamlString}") {
     stage('Stage Build') {
         container('docker') {
             docker.withServer("$dockerServer") {
-                docker.withRegistry('http://k8s-master:32081', 'nexus-oss') {
-                    def customImage = docker.build("${privateImage}.prescan", "-f vendor/docker/Dockerfile .")
-                    customImage.push()
-                }
                 docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
                     def customImage = docker.build("${scanImage}", "-f Dockerfile .")
                     customImage.push()
                 }
             }
             withEnv(["image=${scanImage}"]) {
-                sh 'echo "$image" > anchore_images'
+                sh """
+                    echo "$image" > anchore_images
+                    echo "Slep for 10s - allow docker.io to process image"
+                    sleep 10
+                """
             }
         }
     }
