@@ -83,11 +83,11 @@ podTemplate(yaml: "${yamlString}") {
     // packages from requirements.txt
     stage('Setup') {
         if ( (env.BRANCH_NAME).equals('master') ) {
-            privateImage = "cowbull_webapp:${major}.${minor}.${env.BUILD_NUMBER}"
+            privateImage = "k8s-master:32081/cowbull_webapp:${major}.${minor}.${env.BUILD_NUMBER}"
             imageName = "dsanderscan/cowbull_webapp:${major}.${minor}.${env.BUILD_NUMBER}"
             scanImage = "nexus-docker.default.svc.cluster.local:18081/cowbull_webapp:${major}.${minor}.${env.BUILD_NUMBER}.prescan"
         } else {
-            privateImage = "cowbull_webapp:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
+            privateImage = "k8s-master:32081/cowbull_webapp:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
             imageName = "dsanderscan/cowbull_webapp:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
             scanImage = "nexus-docker.default.svc.cluster.local:18081/cowbull_webapp:${env.BRANCH_NAME}.${env.BUILD_NUMBER}.prescan"
         }
