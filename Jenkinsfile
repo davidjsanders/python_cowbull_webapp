@@ -85,11 +85,11 @@ podTemplate(yaml: "${yamlString}") {
         if ( (env.BRANCH_NAME).equals('master') ) {
             privateImage = "cowbull_webapp:${major}.${minor}.${env.BUILD_NUMBER}"
             imageName = "dsanderscan/cowbull_webapp:${major}.${minor}.${env.BUILD_NUMBER}"
-            scanImage = "docker.io/dsanderscan/cowbull_webapp:${major}.${minor}.${env.BUILD_NUMBER}.prescan"
+            scanImage = "nexus-docker.default.svc.cluster.local:18081/cowbull_webapp:${major}.${minor}.${env.BUILD_NUMBER}.prescan"
         } else {
             privateImage = "cowbull_webapp:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
             imageName = "dsanderscan/cowbull_webapp:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
-            scanImage = "docker.io/dsanderscan/cowbull_webapp:${env.BRANCH_NAME}.${env.BUILD_NUMBER}.prescan"
+            scanImage = "nexus-docker.default.svc.cluster.local:18081/cowbull_webapp:${env.BRANCH_NAME}.${env.BUILD_NUMBER}.prescan"
         }
         checkout scm
         container('python') {
@@ -189,16 +189,15 @@ podTemplate(yaml: "${yamlString}") {
     stage('Stage Build') {
         container('docker') {
             docker.withServer("$dockerServer") {
-                docker.withRegistry('https://registry-1.docker.io', 'dockerhub') {
-                    def customImage = docker.build("${imageName}.prescan", "-f Dockerfile .")
+                docker.withRegistry('http://k8s-master:32081', 'nexus-oss') {
+                    def customImage = docker.build("${privateImage}.prescan", "-f Dockerfile .")
                     customImage.push()
                 }
             }
             withEnv(["image=${scanImage}"]) {
                 sh """
+                    echo "Add image $image to anchore_images scan file"
                     echo "$image" > anchore_images
-                    echo "Slep for 10s - allow docker.io to process image"
-                    sleep 10
                 """
             }
         }
