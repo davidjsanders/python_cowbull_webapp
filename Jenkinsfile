@@ -203,6 +203,9 @@ podTemplate(yaml: "${yamlString}") {
         }
     }
 
+    // Re-execute the unit and system tests using the image, to ensure
+    // the images function as expected - i.e. there have been no Docker
+    // build errors introduced.
     stage('Test image') {
         container('docker') {
             docker.withServer("$dockerServer") {
@@ -215,10 +218,16 @@ podTemplate(yaml: "${yamlString}") {
         }
     }
 
+    // Scan the image using the OSS anchore engine to check for vulnerability
+    // and image policy issues. NOTE: bailOnFail is false; if it were set to
+    // true, the pipeline would fail if the image fails to meet policy.
     stage('Anchore scan') {
         anchore bailOnFail: false, bailOnPluginFail: true, engineCredentialsId: 'azure-azadmin', name: 'anchore_images'
     }
 
+    // The finalize step of the pipeline (i.e. everything is good), produces
+    // final Docker images and pushes them to the private registry AND
+    // Docker Hub.
     stage('Finalize') {
         container('docker') {
             docker.withServer("$dockerServer") {
