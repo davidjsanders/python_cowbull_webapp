@@ -189,10 +189,10 @@ podTemplate(yaml: "${yamlString}") {
     stage('Stage Build') {
         container('docker') {
             docker.withServer("$dockerServer") {
-                docker.withRegistry('http://k8s-master:32081', 'nexus-oss') {
+                //docker.withRegistry('http://k8s-master:32081', 'nexus-oss') {
                     def customImage = docker.build("${privateImage}.prescan", "-f Dockerfile .")
                     customImage.push()
-                }
+                //}
             }
             withEnv(["image=${scanImage}"]) {
                 sh """
@@ -206,7 +206,7 @@ podTemplate(yaml: "${yamlString}") {
     stage('Test image') {
         container('docker') {
             docker.withServer("$dockerServer") {
-                withEnv(["image=${imageName}.prescan"]) {
+                withEnv(["image=${privateImage}.prescan"]) {
                     sh """
                         docker run --rm $image /bin/sh -c "python3 tests/main.py"
                     """
