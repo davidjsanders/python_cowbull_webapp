@@ -10,8 +10,12 @@ ifndef VENV
 	override VENV := $(HOMEDIR)/virtuals/cowbull_webapp_p3/bin/activate
 endif
 
+ifndef HOST_IF
+  override HOST_IF := en5
+endif
+
 ifndef HOST_IP
-  override HOST_IP := $(shell ipconfig getifaddr en5)
+  override HOST_IP := $(shell ipconfig getifaddr $(HOST_IF))
 endif
 
 ifndef COWBULL_SERVER_IMAGE
