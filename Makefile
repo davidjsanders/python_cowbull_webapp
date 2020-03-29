@@ -1,25 +1,21 @@
-ifndef MAJOR
-  override MAJOR := 20
-endif
-
-ifndef MINOR
-  override MINOR := 03
-endif
-
 ifndef BUILD_NUMBER
   override BUILD_NUMBER := 5
 endif
 
-ifndef WORKDIR
-  override WORKDIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+ifndef COWBULL_PORT
+  override COWBULL_PORT := 8000
+endif
+
+ifndef COWBULL_SERVER
+  override COWBULL_SERVER := localhost
+endif
+
+ifndef COWBULL_SERVER_IMAGE
+  override COWBULL_SERVER_IMAGE := dsanderscan/cowbull:20.03-2
 endif
 
 ifndef HOMEDIR
   override HOMEDIR := $(shell echo ~)
-endif
-
-ifndef VENV
-	override VENV := $(HOMEDIR)/virtuals/cowbull_webapp_p3/bin/activate
 endif
 
 ifndef HOST_IF
@@ -30,28 +26,32 @@ ifndef HOST_IP
   override HOST_IP := $(shell ipconfig getifaddr $(HOST_IF))
 endif
 
-ifndef REDIS_PORT
-  override REDIS_PORT := 6379
-endif
-
-ifndef COWBULL_SERVER_IMAGE
-  override COWBULL_SERVER_IMAGE := dsanderscan/cowbull:20.03-2
-endif
-
-ifndef COWBULL_SERVER
-  override COWBULL_SERVER := localhost
-endif
-
-ifndef COWBULL_PORT
-  override COWBULL_PORT := 8000
-endif
-
 ifndef IMAGE_NAME
   override IMAGE_NAME := cowbull_webapp
 endif
 
 ifndef IMAGE_REG
   override IMAGE_REG := dsanderscan
+endif
+
+ifndef MAJOR
+  override MAJOR := 20
+endif
+
+ifndef MINOR
+  override MINOR := 03
+endif
+
+ifndef REDIS_PORT
+  override REDIS_PORT := 6379
+endif
+
+ifndef VENV
+	override VENV := $(HOMEDIR)/virtuals/cowbull_webapp_p3/bin/activate
+endif
+
+ifndef WORKDIR
+  override WORKDIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 endif
 
 define start_docker
