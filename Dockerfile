@@ -1,4 +1,7 @@
 FROM	alpine:3.10.2
+ARG		curl_url=curl-7.69.1-r0.apk
+ARG     musl_url=musl-1.1.24-r4.apk 
+ARG 	musl_util_url=musl-1.1.24-r4.apk
 RUN		apk update \
 		&& addgroup -g 10000 cowbull_wa \
 		&& mkdir /cowbull \
@@ -8,13 +11,13 @@ RUN		apk update \
 			curl \
 			musl \
 			python3 \
-			py3-pip \
-		&& curl -Lo /tmp/curl-7.65.3-r0.apk http://dl-3.alpinelinux.org/alpine/edge/main/x86_64/curl-7.65.3-r0.apk \
-		&& apk add /tmp/curl-7.65.3-r0.apk \
-		&& curl -Lo /tmp/musl-1.1.23-r3.apk http://dl-3.alpinelinux.org/alpine/edge/main/x86_64/musl-1.1.23-r3.apk \
-		&& apk add /tmp/musl-1.1.23-r3.apk \
-		&& curl -Lo /tmp/musl-utils-1.1.23-r3.apk http://dl-3.alpinelinux.org/alpine/edge/main/x86_64/musl-utils-1.1.23-r3.apk \
-		&& apk add /tmp/musl-utils-1.1.23-r3.apk
+			py3-pip
+RUN		curl -Lo /tmp/${curl_url} http://dl-3.alpinelinux.org/alpine/edge/main/x86_64/${curl_url} \
+		&& apk add /tmp/${curl_url} \
+		&& curl -Lo /tmp/${musl_url} http://dl-3.alpinelinux.org/alpine/edge/main/x86_64/${musl_url} \
+		&& apk add /tmp/${musl_url} \
+		&& curl -Lo /tmp/${musl_util_url} http://dl-3.alpinelinux.org/alpine/edge/main/x86_64/${musl_util_url} \
+		&& apk add /tmp/${musl_util_url}
 WORKDIR	/cowbull
 COPY	requirements.txt /cowbull/
 RUN		pip3 install --upgrade pip \
@@ -37,8 +40,8 @@ USER 	root
 RUN 	chmod +x \
 			/cowbull/healthcheck/healthcheck.sh \
 			/cowbull/healthcheck/liveness.sh
-USER	cowbull
 
+USER	cowbull
 HEALTHCHECK \
 	--interval=10s \
 	--timeout=5s \
