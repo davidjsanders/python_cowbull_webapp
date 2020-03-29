@@ -1,0 +1,37 @@
+version: '3.7'
+
+services:
+  redis:
+    image: 'redis:alpine3.11'
+    networks:
+      - webapp_cowbull_network
+    restart: always
+  cowbull_svc:
+    image: 'dsanderscan/cowbull:20.03-2'
+    depends_on:
+      - redis
+    environment:
+      - LOGGING_LEVEL=10
+      - PORT=8080
+      - 'PERSISTER={"engine_name": "redis", "parameters": {"host": "redis", "port": 6379, "db": 0}}'
+    networks:
+      - webapp_cowbull_network
+    restart: always
+  cowbull_webapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - cowbull_svc
+    ports:
+      - "8080:8080"
+    environment:
+      - COWBULL_SERVER=cowbull_svc
+      - COWBULL_PORT=8080
+      - COWBULL_VERSION=v1
+      - BUILD_NUMBER=1.0.172-COMPOSE
+      - COWBULL_ENVIRONMENT=2.0.76
+    networks:
+      - webapp_cowbull_network
+networks:
+  webapp_cowbull_network:

@@ -47,7 +47,7 @@ HEALTHCHECK \
 	--timeout=5s \
 	--start-period=10s \
 	--retries=3 \
-	CMD [ "/bin/bash", "-c", "/cowbull/healthcheck/healthcheck.sh" ]
+	CMD [ "/bin/sh", "-c", "/cowbull/healthcheck/healthcheck.sh" ]
 
 CMD		["gunicorn", "-b", "0.0.0.0:8080", "-w", "4", "app:app"]
 EXPOSE	8080

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 set -o pipefail
 curl -sI http://localhost:8080 &> /dev/null
 ret_stat=$?

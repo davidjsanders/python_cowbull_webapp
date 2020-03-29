@@ -1,5 +1,5 @@
 ifndef BUILD_NUMBER
-  override BUILD_NUMBER := 5
+  override BUILD_NUMBER := 7
 endif
 
 ifndef COWBULL_PORT
@@ -91,7 +91,7 @@ define end_log
 	echo
 endef
 
-.PHONY: build debug push run test
+.PHONY: build debug push run shell test
 
 build:
 	@start="`date +"%d%m%YT%H:%M:%S%Z"`"; \
@@ -129,6 +129,13 @@ run:
 		python app.py; \
 	deactivate; \
 	$(call stop_docker);  \
+	$(call end_log,"run",$$start,$(shell date +"%d%m%YT%H:%M:%S%Z"))
+
+shell:
+	@start="`date +"%d%m%YT%H:%M:%S%Z"`"; \
+	docker run \
+		-it --rm  \
+		$(IMAGE_REG)/$(IMAGE_NAME):$(MAJOR).$(MINOR)-$(BUILD_NUMBER) /bin/sh; \
 	$(call end_log,"run",$$start,$(shell date +"%d%m%YT%H:%M:%S%Z"))
 
 test:
