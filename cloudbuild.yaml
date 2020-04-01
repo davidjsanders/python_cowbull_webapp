@@ -1,0 +1,5 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', 'gcr.io/personal-dev-272223/python_cowbull_webapp', '.' ]
+images:
+- 'gcr.io/personal-dev-272223/python_cowbull_webapp'
