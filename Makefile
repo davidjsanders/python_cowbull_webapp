@@ -1,5 +1,5 @@
 ifndef BUILD_NUMBER
-  override BUILD_NUMBER := 7
+  override BUILD_NUMBER := 10
 endif
 
 ifndef COWBULL_PORT
@@ -12,6 +12,10 @@ endif
 
 ifndef COWBULL_SERVER_IMAGE
   override COWBULL_SERVER_IMAGE := dsanderscan/cowbull:20.03-2
+endif
+
+ifndef COWBULL_WEBAPP_PORT
+  override COWBULL_WEBAPP_PORT := 8080
 endif
 
 ifndef HOMEDIR
@@ -91,7 +95,7 @@ define end_log
 	echo
 endef
 
-.PHONY: build debug push run shell test
+.PHONY: build debug docker push run shell test
 
 build:
 	@start="`date +"%d%m%YT%H:%M:%S%Z"`"; \
@@ -113,6 +117,21 @@ debug:
 	$(call stop_docker); \
 	$(call end_log,"debug",$$start,$(shell date +"%d%m%YT%H:%M:%S%Z"))
 
+docker:
+	@start="`date +"%d%m%YT%H:%M:%S%Z"`"; \
+	source $(VENV); \
+	$(call start_docker,10); \
+	docker run \
+	    -it \
+		--rm \
+		-p $(COWBULL_WEBAPP_PORT):8080 \
+		--env COWBULL_PORT=$(COWBULL_PORT) \
+		--env PORT=8080 \
+		--env COWBULL_SERVER=$(HOST_IP) \
+		$(IMAGE_REG)/$(IMAGE_NAME):$(MAJOR).$(MINOR)-$(BUILD_NUMBER); \
+	$(call stop_docker); \
+	$(call end_log,"build",$$start,$(shell date +"%d%m%YT%H:%M:%S%Z"))
+
 push:
 	@start="`date +"%d%m%YT%H:%M:%S%Z"`"; \
 	docker push $(IMAGE_REG)/$(IMAGE_NAME):$(MAJOR).$(MINOR)-$(BUILD_NUMBER); \
@@ -126,6 +145,7 @@ run:
 		LOGGING_LEVEL=30 \
 		COWBULL_PORT=$(COWBULL_PORT) \
 		COWBULL_SERVER=$(COWBULL_SERVER) \
+		FLASK_PORT=$(COWBULL_WEBAPP_PORT) \
 		python app.py; \
 	deactivate; \
 	$(call stop_docker);  \

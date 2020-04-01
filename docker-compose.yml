@@ -26,11 +26,12 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - COWBULL_SERVER=cowbull_svc
+      - BUILD_NUMBER=docker-compose
+      - COWBULL_ENVIRONMENT=20.03-2
       - COWBULL_PORT=8080
+      - COWBULL_SERVER=cowbull_svc
       - COWBULL_VERSION=v1
-      - BUILD_NUMBER=1.0.172-COMPOSE
-      - COWBULL_ENVIRONMENT=2.0.76
+      - PORT=8080
     networks:
       - webapp_cowbull_network
 networks:

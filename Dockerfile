@@ -1,7 +1,8 @@
-FROM	alpine:3.10.2
+FROM	alpine:3.11
 ARG		curl_url=curl-7.69.1-r0.apk
 ARG     musl_url=musl-1.1.24-r4.apk 
 ARG 	musl_util_url=musl-1.1.24-r4.apk
+ARG     build_number=20.03-2
 RUN		apk update \
 		&& addgroup -g 10000 cowbull_wa \
 		&& mkdir /cowbull \
@@ -31,6 +32,7 @@ COPY	initialization_package /cowbull/initialization_package/
 COPY	static /cowbull/static/
 COPY 	tests /cowbull/tests/
 COPY 	healthcheck /cowbull/healthcheck/
+COPY    entrypoint.sh /cowbull/
 
 COPY    app.py  /cowbull/
 COPY	__init__.py /cowbull/
@@ -39,9 +41,12 @@ COPY    LICENSE /cowbull/
 USER 	root
 RUN 	chmod +x \
 			/cowbull/healthcheck/healthcheck.sh \
-			/cowbull/healthcheck/liveness.sh
+			/cowbull/healthcheck/liveness.sh \
+			/cowbull/entrypoint.sh
 
 USER	cowbull
+ENV     BUILD_NUMBER=${build_number}
+ENV     COWBULL_ENVIRONMENT=20.03-2
 HEALTHCHECK \
 	--interval=10s \
 	--timeout=5s \
@@ -49,6 +54,7 @@ HEALTHCHECK \
 	--retries=3 \
 	CMD [ "/bin/sh", "-c", "/cowbull/healthcheck/healthcheck.sh" ]
 
-CMD		["gunicorn", "-b", "0.0.0.0:8080", "-w", "4", "app:app"]
+ENTRYPOINT [ "/cowbull/entrypoint.sh" ]
+#CMD		["gunicorn", "-b", "0.0.0.0:8080", "-w", "4", "app:app"]
 EXPOSE	8080
 LABEL	MAINTAINER="dsanderscanada@gmail.com"
