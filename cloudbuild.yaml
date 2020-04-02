@@ -3,3 +3,4 @@ steps:
   args: [ 'build', '-t', 'gcr.io/personal-dev-272223/python_cowbull_webapp', '.' ]
 images:
 - 'gcr.io/personal-dev-272223/python_cowbull_webapp'
+tags: ["20.04.1"]
