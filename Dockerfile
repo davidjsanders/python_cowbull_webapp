@@ -2,7 +2,7 @@ FROM	alpine:3.11
 ARG		curl_url=curl-7.69.1-r0.apk
 ARG     musl_url=musl-1.1.24-r4.apk 
 ARG 	musl_util_url=musl-1.1.24-r4.apk
-ARG     build_number=20.04-11
+ARG     build_number=latest
 RUN		apk update \
 		&& addgroup -g 10000 cowbull_wa \
 		&& mkdir /cowbull \

@@ -7,6 +7,6 @@ steps:
     '.' 
   ]
 substitutions:
-  _BUILD_NUMBER: "20.04-11"
+  _BUILD_NUMBER: "20.04-14"
 images:
 - 'gcr.io/personal-dev-272223/cowbull_webapp:${_BUILD_NUMBER}'
