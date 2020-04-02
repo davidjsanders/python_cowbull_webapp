@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
 pip install -r requirements.txt
 export PYTHONPATH="$(pwd)"
-python tests/mains.py
+python tests/main.py
 exit $?
