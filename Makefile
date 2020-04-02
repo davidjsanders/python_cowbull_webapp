@@ -1,5 +1,5 @@
 ifndef BUILD_NUMBER
-  override BUILD_NUMBER := 20.04-14
+  override BUILD_NUMBER := 20.04-17
 endif
 
 ifndef COWBULL_PORT
@@ -16,6 +16,10 @@ endif
 
 ifndef COWBULL_WEBAPP_PORT
   override COWBULL_WEBAPP_PORT := 8080
+endif
+
+ifndef DATE_FORMAT
+  override DATE_FORMAT := %Y-%m-%dT%H:%M:%S%Z
 endif
 
 ifndef HOMEDIR
@@ -90,15 +94,16 @@ endef
 .PHONY: build debug docker push run shell test
 
 build:
-	@start="`date +"%d%m%YT%H:%M:%S%Z"`"; \
+	@start="`date +"$(DATE_FORMAT)"`"; \
 	docker build \
 	    --build-arg=build_number=$(BUILD_NUMBER) \
 		--tag $(IMAGE_REG)/$(IMAGE_NAME):$(BUILD_NUMBER) \
 		. ; \
-	$(call end_log,"build",$$start,$(shell date +"%d%m%YT%H:%M:%S%Z"))
+	enddate="`date +$(DATE_FORMAT)`"; \
+	$(call end_log,"build",$$start,$$enddate)
 
 debug:
-	@start="`date +"%d%m%YT%H:%M:%S%Z"`"; \
+	@start="`date +"$(DATE_FORMAT)"`"; \
 	source $(VENV); \
 	$(call start_docker,10); \
 	PYTHONPATH=$(WORKDIR) \
@@ -108,10 +113,11 @@ debug:
 		python app.py; \
 	deactivate; \
 	$(call stop_docker); \
-	$(call end_log,"debug",$$start,$(shell date +"%d%m%YT%H:%M:%S%Z"))
+	enddate="`date +$(DATE_FORMAT)`"; \
+	$(call end_log,"debug",$$start,$$enddate)
 
 docker:
-	@start="`date +"%d%m%YT%H:%M:%S%Z"`"; \
+	@start="`date +"$(DATE_FORMAT)"`"; \
 	source $(VENV); \
 	$(call start_docker,10); \
 	docker run \
@@ -123,15 +129,17 @@ docker:
 		--env COWBULL_SERVER=$(HOST_IP) \
 		$(IMAGE_REG)/$(IMAGE_NAME):$(BUILD_NUMBER); \
 	$(call stop_docker); \
-	$(call end_log,"build",$$start,$(shell date +"%d%m%YT%H:%M:%S%Z"))
+	enddate="`date +$(DATE_FORMAT)`"; \
+	$(call end_log,"build",$$start,$$enddate)
 
 push:
-	@start="`date +"%d%m%YT%H:%M:%S%Z"`"; \
+	@start="`date +"$(DATE_FORMAT)"`"; \
 	docker push $(IMAGE_REG)/$(IMAGE_NAME):$(BUILD_NUMBER); \
-	$(call end_log,"push",$$start,$(shell date +"%d%m%YT%H:%M:%S%Z"))
+	enddate="`date +$(DATE_FORMAT)`"; \
+	$(call end_log,"push",$$start,$$enddate)
 
 run:
-	@start="`date +"%d%m%YT%H:%M:%S%Z"`"; \
+	@start="`date +"$(DATE_FORMAT)"`"; \
 	source $(VENV); \
 	$(call start_docker,30); \
 	PYTHONPATH=$(WORKDIR) \
@@ -142,20 +150,23 @@ run:
 		python app.py; \
 	deactivate; \
 	$(call stop_docker);  \
-	$(call end_log,"run",$$start,$(shell date +"%d%m%YT%H:%M:%S%Z"))
+	enddate="`date +$(DATE_FORMAT)`"; \
+	$(call end_log,"run",$$start,$$enddate)
 
 shell:
-	@start="`date +"%d%m%YT%H:%M:%S%Z"`"; \
+	@start="`date +"$(DATE_FORMAT)"`"; \
 	docker run \
 		-it --rm  \
 		$(IMAGE_REG)/$(IMAGE_NAME):$(BUILD_NUMBER) /bin/sh; \
-	$(call end_log,"run",$$start,$(shell date +"%d%m%YT%H:%M:%S%Z"))
+	enddate="`date +$(DATE_FORMAT)`"; \
+	$(call end_log,"run",$$start,$$enddate)
 
 test:
-	@start="`date +"%d%m%YT%H:%M:%S%Z"`"; \
+	@start="`date +"$(DATE_FORMAT)"`"; \
 	source $(VENV); \
 	PYTHONPATH=$(WORKDIR) \
 		LOGGING_LEVEL=30 \
 		python tests/main.py; \
 	deactivate; \
-	$(call end_log,"tests",$$start,$(shell date +"%d%m%YT%H:%M:%S%Z"))
+	enddate="`date +$(DATE_FORMAT)`"; \
+	$(call end_log,"tests",$$start,$$enddate)

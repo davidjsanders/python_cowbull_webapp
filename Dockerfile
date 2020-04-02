@@ -1,19 +1,19 @@
-FROM	alpine:3.11
+# FROM	alpine:3.11
+FROM	python:3.6.10-alpine3.11
 ARG		curl_url=curl-7.69.1-r0.apk
 ARG     musl_url=musl-1.1.24-r4.apk 
 ARG 	musl_util_url=musl-1.1.24-r4.apk
-ARG     build_number=latest
 RUN		apk update \
 		&& addgroup -g 10000 cowbull_wa \
 		&& mkdir /cowbull \
 		&& adduser -u 10000 -G cowbull_wa --disabled-password --home /cowbull cowbull \
-		&& chown cowbull /cowbull \
-		&& apk add --update \
+		&& chown cowbull /cowbull
+RUN		apk add --update \
 			curl \
 			musl \
-			python3 \
-			py3-pip
-RUN		curl -Lo /tmp/${curl_url} http://dl-3.alpinelinux.org/alpine/edge/main/x86_64/${curl_url} \
+			# python3 \
+			# py3-pip \
+		&& curl -Lo /tmp/${curl_url} http://dl-3.alpinelinux.org/alpine/edge/main/x86_64/${curl_url} \
 		&& apk add /tmp/${curl_url} \
 		&& curl -Lo /tmp/${musl_url} http://dl-3.alpinelinux.org/alpine/edge/main/x86_64/${musl_url} \
 		&& apk add /tmp/${musl_url} \
@@ -45,6 +45,7 @@ RUN 	chmod +x \
 			/cowbull/entrypoint.sh
 
 USER	cowbull
+ARG     build_number=latest
 ENV     BUILD_NUMBER=${build_number}
 ENV     COWBULL_ENVIRONMENT=20.03-2
 HEALTHCHECK \
