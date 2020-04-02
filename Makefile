@@ -1,5 +1,5 @@
 ifndef BUILD_NUMBER
-  override BUILD_NUMBER := 10
+  override BUILD_NUMBER := 20.04-11
 endif
 
 ifndef COWBULL_PORT
@@ -36,14 +36,6 @@ endif
 
 ifndef IMAGE_REG
   override IMAGE_REG := dsanderscan
-endif
-
-ifndef MAJOR
-  override MAJOR := 20
-endif
-
-ifndef MINOR
-  override MINOR := 03
 endif
 
 ifndef REDIS_PORT
@@ -100,7 +92,8 @@ endef
 build:
 	@start="`date +"%d%m%YT%H:%M:%S%Z"`"; \
 	docker build \
-		-t $(IMAGE_REG)/$(IMAGE_NAME):$(MAJOR).$(MINOR)-$(BUILD_NUMBER) \
+	    --build-arg=build_number=$(BUILD_NUMBER) \
+		--tag $(IMAGE_REG)/$(IMAGE_NAME):$(BUILD_NUMBER) \
 		. ; \
 	$(call end_log,"build",$$start,$(shell date +"%d%m%YT%H:%M:%S%Z"))
 
@@ -128,13 +121,13 @@ docker:
 		--env COWBULL_PORT=$(COWBULL_PORT) \
 		--env PORT=8080 \
 		--env COWBULL_SERVER=$(HOST_IP) \
-		$(IMAGE_REG)/$(IMAGE_NAME):$(MAJOR).$(MINOR)-$(BUILD_NUMBER); \
+		$(IMAGE_REG)/$(IMAGE_NAME):$(BUILD_NUMBER); \
 	$(call stop_docker); \
 	$(call end_log,"build",$$start,$(shell date +"%d%m%YT%H:%M:%S%Z"))
 
 push:
 	@start="`date +"%d%m%YT%H:%M:%S%Z"`"; \
-	docker push $(IMAGE_REG)/$(IMAGE_NAME):$(MAJOR).$(MINOR)-$(BUILD_NUMBER); \
+	docker push $(IMAGE_REG)/$(IMAGE_NAME):$(BUILD_NUMBER); \
 	$(call end_log,"push",$$start,$(shell date +"%d%m%YT%H:%M:%S%Z"))
 
 run:
@@ -155,7 +148,7 @@ shell:
 	@start="`date +"%d%m%YT%H:%M:%S%Z"`"; \
 	docker run \
 		-it --rm  \
-		$(IMAGE_REG)/$(IMAGE_NAME):$(MAJOR).$(MINOR)-$(BUILD_NUMBER) /bin/sh; \
+		$(IMAGE_REG)/$(IMAGE_NAME):$(BUILD_NUMBER) /bin/sh; \
 	$(call end_log,"run",$$start,$(shell date +"%d%m%YT%H:%M:%S%Z"))
 
 test:

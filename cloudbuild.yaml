@@ -3,11 +3,10 @@ steps:
   args: [ 
     'build', 
     '-t', 
-    'gcr.io/personal-dev-272223/cowbull_webapp:${_BUILD_NUMBER}-${_BUILD_SEQ}', 
+    'gcr.io/personal-dev-272223/cowbull_webapp:${_BUILD_NUMBER}', 
     '.' 
   ]
 substitutions:
-  _BUILD_NUMBER: "20.04"
-  _BUILD_SEQ: "4"
+  _BUILD_NUMBER: "20.04-11"
 images:
-- 'gcr.io/personal-dev-272223/cowbull_webapp:${_BUILD_NUMBER}-${_BUILD_SEQ}'
+- 'gcr.io/personal-dev-272223/cowbull_webapp:${_BUILD_NUMBER}'
