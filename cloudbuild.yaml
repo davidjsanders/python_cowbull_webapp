@@ -1,8 +1,13 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  args: [ 'build', '-t', 'gcr.io/personal-dev-272223/python_cowbull_webapp:${_BUILD_NUMBER}-${_BUILD_SEQ}', '.' ]
+  args: [ 
+    'build', 
+    '-t', 
+    'gcr.io/personal-dev-272223/cowbull_webapp:${_BUILD_NUMBER}-${_BUILD_SEQ}', 
+    '.' 
+  ]
 substitutions:
   _BUILD_NUMBER: "20.04"
-  _BUILD_SEQ: "3"
+  _BUILD_SEQ: "4"
 images:
-- 'gcr.io/personal-dev-272223/python_cowbull_webapp:${_BUILD_NUMBER}-${_BUILD_SEQ}'
+- 'gcr.io/personal-dev-272223/cowbull_webapp:${_BUILD_NUMBER}-${_BUILD_SEQ}'
