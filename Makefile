@@ -1,5 +1,5 @@
 ifndef BUILD_NUMBER
-  override BUILD_NUMBER := 20.04-17
+  override BUILD_NUMBER := 20.04-18
 endif
 
 ifndef COWBULL_PORT
@@ -12,6 +12,10 @@ endif
 
 ifndef COWBULL_SERVER_IMAGE
   override COWBULL_SERVER_IMAGE := dsanderscan/cowbull:20.03-2
+endif
+
+ifndef COWBULL_SERVER_URL
+  override COWBULL_SERVER_URL := http://localhost
 endif
 
 ifndef COWBULL_WEBAPP_PORT
@@ -99,6 +103,17 @@ build:
 	    --build-arg=build_number=$(BUILD_NUMBER) \
 		--tag $(IMAGE_REG)/$(IMAGE_NAME):$(BUILD_NUMBER) \
 		. ; \
+	enddate="`date +$(DATE_FORMAT)`"; \
+	$(call end_log,"build",$$start,$$enddate)
+
+curltest:
+	@start="`date +"$(DATE_FORMAT)"`"; \
+	echo ""; \
+	echo "Get a game"; \
+	echo "----------"; \
+	curl $(COWBULL_SERVER_URL):$(COWBULL_PORT)/ ; \
+	echo ; \
+	echo ; \
 	enddate="`date +$(DATE_FORMAT)`"; \
 	$(call end_log,"build",$$start,$$enddate)
 
