@@ -11,11 +11,11 @@ ifndef COWBULL_SERVER
 endif
 
 ifndef COWBULL_SERVER_IMAGE
-  override COWBULL_SERVER_IMAGE := dsanderscan/cowbull:20.03-2
+  override COWBULL_SERVER_IMAGE := dsanderscan/cowbull:20.04-28
 endif
 
 ifndef COWBULL_SERVER_URL
-  override COWBULL_SERVER_URL := http://localhost
+  override COWBULL_SERVER_URL := http://host.docker.internal
 endif
 
 ifndef COWBULL_WEBAPP_PORT
@@ -30,12 +30,9 @@ ifndef HOMEDIR
   override HOMEDIR := $(shell echo ~)
 endif
 
-ifndef HOST_IF
-  override HOST_IF := en5
-endif
-
 ifndef HOST_IP
-  override HOST_IP := $(shell ipconfig getifaddr $(HOST_IF))
+  override HOST_IP := host.docker.internal
+#   override HOST_IP := $(shell ipconfig getifaddr $(HOST_IF))
 endif
 
 ifndef IMAGE_NAME
