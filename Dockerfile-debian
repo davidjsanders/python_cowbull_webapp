@@ -1,25 +1,17 @@
 # FROM	alpine:3.11
-FROM	python:3.6.10-alpine3.11
-ARG		curl_url=curl-7.69.1-r0.apk
-ARG     musl_url=musl-1.1.24-r6.apk 
-ARG 	musl_util_url=musl-utils-1.1.24-r6.apk
-RUN		apk update
-RUN		apk add --update \
-			curl \
-			musl \
-			# python3 \
-			# py3-pip \
-		&& curl -Lo /tmp/${curl_url} http://dl-3.alpinelinux.org/alpine/edge/main/x86_64/${curl_url} \
-		&& apk add /tmp/${curl_url} \
-		&& curl -Lo /tmp/${musl_url} http://dl-3.alpinelinux.org/alpine/edge/main/x86_64/${musl_url} \
-		&& apk add /tmp/${musl_url} \
-		&& curl -Lo /tmp/${musl_util_url} http://dl-3.alpinelinux.org/alpine/edge/main/x86_64/${musl_util_url} \
-		&& apk add /tmp/${musl_util_url}
-RUN		addgroup -g 10000 cowbull_wa \
-		&& mkdir /cowbull \
-		&& adduser -u 10000 -G cowbull_wa --disabled-password --home /cowbull cowbull \
+FROM	python:3.8.2-slim-buster
+RUN		DEBIAN_FRONTEND=noninteractive apt-get update \
+		&& DEBIAN_FRONTEND=noninteractive apt-get upgrade --yes \
+		&& DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade --yes
+RUN		DEBIAN_FRONTEND=noninteractive addgroup --gid 10000 cowbull_wa \
+		&& DEBIAN_FRONTEND=noninteractive adduser \
+			--uid 10000 \
+			--ingroup cowbull_wa \
+			--disabled-password \
+			--home /cowbull \
+			--gecos "" \
+			cowbull \
 		&& chown cowbull /cowbull
-
 WORKDIR	/cowbull
 COPY	requirements.txt /cowbull/
 RUN		pip3 install --upgrade pip \
