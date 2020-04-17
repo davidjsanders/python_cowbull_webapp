@@ -1,5 +1,5 @@
 ifndef BUILD_NUMBER
-  override BUILD_NUMBER := 20.04-19
+  override BUILD_NUMBER := 20.04-20
 endif
 
 ifndef COWBULL_PORT
@@ -103,28 +103,15 @@ build:
 	enddate="`date +$(DATE_FORMAT)`"; \
 	$(call end_log,"build",$$start,$$enddate)
 
-curltest:
-	@start="`date +"$(DATE_FORMAT)"`"; \
-	echo ""; \
-	echo "Get a game"; \
-	echo "----------"; \
-	curl $(COWBULL_SERVER_URL):$(COWBULL_PORT)/ ; \
-	echo ; \
-	echo ; \
-	enddate="`date +$(DATE_FORMAT)`"; \
-	$(call end_log,"build",$$start,$$enddate)
-
 debug:
 	@start="`date +"$(DATE_FORMAT)"`"; \
 	source $(VENV); \
-	$(call start_docker,10); \
 	PYTHONPATH=$(WORKDIR) \
 		LOGGING_LEVEL=10 \
 		COWBULL_PORT=$(COWBULL_PORT) \
 		COWBULL_SERVER=$(COWBULL_SERVER) \
 		python app.py; \
 	deactivate; \
-	$(call stop_docker); \
 	enddate="`date +$(DATE_FORMAT)`"; \
 	$(call end_log,"debug",$$start,$$enddate)
 
@@ -136,9 +123,9 @@ docker:
 	    -it \
 		--rm \
 		-p $(COWBULL_WEBAPP_PORT):8080 \
-		--env COWBULL_PORT=$(COWBULL_PORT) \
+		--env COWBULL_PORT=host.docker.internal \
 		--env PORT=8080 \
-		--env COWBULL_SERVER=$(HOST_IP) \
+		--env COWBULL_SERVER=host.docker.internal \
 		$(IMAGE_REG)/$(IMAGE_NAME):$(BUILD_NUMBER); \
 	$(call stop_docker); \
 	enddate="`date +$(DATE_FORMAT)`"; \

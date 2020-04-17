@@ -1,42 +1,25 @@
 # FROM	alpine:3.11
-FROM	python:3.6.10-alpine3.11
-ARG		curl_url=curl-7.69.1-r0.apk
-ARG     musl_url=musl-1.1.24-r6.apk 
-ARG 	musl_util_url=musl-utils-1.1.24-r6.apk
-RUN		apk update \
-		&& addgroup -g 10000 cowbull_wa \
-		&& mkdir /cowbull \
-		&& adduser -u 10000 -G cowbull_wa --disabled-password --home /cowbull cowbull \
+FROM	python:3.8.2-slim-buster
+RUN		DEBIAN_FRONTEND=noninteractive apt-get update \
+		&& DEBIAN_FRONTEND=noninteractive apt-get upgrade --yes \
+		&& DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade --yes
+RUN		DEBIAN_FRONTEND=noninteractive addgroup --gid 10000 cowbull_wa \
+		&& DEBIAN_FRONTEND=noninteractive adduser \
+			--uid 10000 \
+			--ingroup cowbull_wa \
+			--disabled-password \
+			--home /cowbull \
+			--gecos "" \
+			cowbull \
 		&& chown cowbull /cowbull
-RUN		apk add --update \
-			curl \
-			musl \
-			# python3 \
-			# py3-pip \
-		&& curl -Lo /tmp/${curl_url} http://dl-3.alpinelinux.org/alpine/edge/main/x86_64/${curl_url} \
-		&& apk add /tmp/${curl_url} \
-		&& curl -Lo /tmp/${musl_url} http://dl-3.alpinelinux.org/alpine/edge/main/x86_64/${musl_url} \
-		&& apk add /tmp/${musl_url} \
-		&& curl -Lo /tmp/${musl_util_url} http://dl-3.alpinelinux.org/alpine/edge/main/x86_64/${musl_util_url} \
-		&& apk add /tmp/${musl_util_url}
 WORKDIR	/cowbull
 COPY	requirements.txt /cowbull/
 RUN		pip3 install --upgrade pip \
 		&& pip3 install -r /cowbull/requirements.txt
+
 USER	cowbull
 ENV		PYTHONPATH="/cowbull:/cowbull/tests"
-COPY	GameSPA /cowbull/GameSPA/
-COPY    Health /cowbull/Health/
-COPY	templates /cowbull/templates/
-COPY	initialization_package /cowbull/initialization_package/
-COPY	static /cowbull/static/
-COPY 	tests /cowbull/tests/
-COPY 	healthcheck /cowbull/healthcheck/
-COPY    entrypoint.sh /cowbull/
-
-COPY    app.py  /cowbull/
-COPY	__init__.py /cowbull/
-COPY    LICENSE /cowbull/
+COPY 	. ./
 
 USER 	root
 RUN 	chmod +x \
@@ -47,7 +30,7 @@ RUN 	chmod +x \
 USER	cowbull
 ARG     build_number=latest
 ENV     BUILD_NUMBER=${build_number}
-ENV     COWBULL_ENVIRONMENT=20.03-2
+ENV     COWBULL_ENVIRONMENT=20.04-28
 HEALTHCHECK \
 	--interval=10s \
 	--timeout=5s \
