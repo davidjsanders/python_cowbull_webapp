@@ -12,7 +12,7 @@ steps:
     '.' 
   ]
 substitutions:
-  _BUILD_NUMBER: "20.04-21"
+  _BUILD_NUMBER: "20.04-22"
 images:
 - 'gcr.io/personal-dev-272223/cowbull_webapp:${_BUILD_NUMBER}'
 artifacts:

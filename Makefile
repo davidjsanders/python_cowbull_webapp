@@ -1,5 +1,5 @@
 ifndef BUILD_NUMBER
-  override BUILD_NUMBER := 20.04-21
+  override BUILD_NUMBER := 20.04-22
 endif
 
 ifndef COWBULL_PORT
@@ -140,7 +140,6 @@ push:
 run:
 	@start="`date +"$(DATE_FORMAT)"`"; \
 	source $(VENV); \
-	$(call start_docker,30); \
 	PYTHONPATH=$(WORKDIR) \
 		LOGGING_LEVEL=30 \
 		COWBULL_PORT=$(COWBULL_PORT) \
@@ -148,7 +147,6 @@ run:
 		FLASK_PORT=$(COWBULL_WEBAPP_PORT) \
 		python app.py; \
 	deactivate; \
-	$(call stop_docker);  \
 	enddate="`date +$(DATE_FORMAT)`"; \
 	$(call end_log,"run",$$start,$$enddate)
 
