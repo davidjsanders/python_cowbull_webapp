@@ -33,7 +33,8 @@ USER 	root
 RUN 	chmod +x \
 			/cowbull/healthcheck/healthcheck.sh \
 			/cowbull/healthcheck/liveness.sh \
-			/cowbull/entrypoint.sh
+			/cowbull/entrypoint.sh \
+&&      chown -R cowbull:cowbull_wa /cowbull
 
 USER	cowbull
 ARG     build_number=latest

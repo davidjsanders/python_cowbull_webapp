@@ -1,23 +1,13 @@
-runtime: python27
-api_version: 1
-threadsafe: true
+runtime: python37
 service: webapp
-
-libraries:
-- name: ssl
-  version: latest
 
 handlers:
 - url: /.*
-  script: app.app
-
-skip_files:
-  - vendor/docker/
-  - vendor/kubernetes/
+  script: auto
 
 env_variables:
-  COWBULL_PROTOCOL: "http"
-  COWBULL_SERVER: "cowbull-test-project.appspot.com"
+  COWBULL_PROTOCOL: "https"
+  COWBULL_SERVER: "djsanders-dev-spaces.ue.r.appspot.com"
   COWBULL_VERSION: "v1"
-  COWBULL_PORT: 80
+  COWBULL_PORT: 443
   LOGGING_LEVEL: 10
